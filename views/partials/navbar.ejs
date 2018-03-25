@@ -1,0 +1,44 @@
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="/stylesheets/navbar.css">
+
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+	<div class="container">
+	  <a class="navbar-brand" href="/">LOGO</a>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
+
+	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	    <ul class="navbar-nav mr-auto">
+	      <li class="nav-item">
+	        <a class="nav-link" href="#">WSTECZ</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#">24h</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#">48h</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="#">72h</a>
+	      </li>
+	    </ul>
+	    <form class="form-inline my-2 my-lg-0" id="searchForm" action="/" method="POST">
+	      <input class="form-control mr-sm-2" type="search" placeholder="SZUKAJ" aria-label="Search">
+	      <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">SZUKAJ</button> -->
+	    </form>
+	    <ul class="navbar-nav">
+	    	<% if (!currentUser) {%>
+	    		<li class="nav-item">
+			    	<a href="/users/login" class="btn btn-light">LOG/REJ</a>
+			    </li>
+	    	<% } else { %>
+		    	<a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+		    <% } %>
+	    </ul>
+	    
+	  </div>
+	</div>
+</nav>
+

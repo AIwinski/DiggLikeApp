@@ -1,0 +1,25 @@
+.navbar-brand {
+  left: calc(50% - 30px);
+  position: relative;
+}
+
+#searchForm{
+	margin-right: 15px;
+}
+#searchForm:focus {
+	margin-right: 15px;
+}
+
+.btn-light{
+	border: 1px solid lightgrey;
+}
+
+.navbar-light{
+	background: white;
+	border-bottom: 1px solid lightgrey;
+}
+
+.navbar-light .navbar-nav .nav-link {
+	color: black;
+}
+

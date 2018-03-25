@@ -1,0 +1,63 @@
+<!-- <form class="form-signin" action="/users/register" method="POST">
+  <h2 class="form-signin-heading">Please sign up</h2>
+
+  <label for="inputEmail" class="sr-only">Email address</label>
+  <input type="email" id="inputEmail" name="email" class="form-control" placeholder="Email address" required autofocus>
+
+  <label for="inputUsername" class="sr-only">Username</label>
+  <input type="text" id="inputUsername" name="username" class="form-control" placeholder="Username" required>
+
+  <label for="inputPassword" class="sr-only">Password</label>
+  <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
+
+  <label for="inputConfirmPassword" class="sr-only">Confirm Password</label>
+  <input type="password" id="inputConfirmPassword" name="confirmationPassword" class="form-control" placeholder="Confirm Password" required>
+
+  <br/>
+
+  <button class="btn btn-lg btn-default btn-block" type="submit">Sign up</button>
+</form>
+ -->
+<% include ./partials/header %>
+<link rel="stylesheet" type="text/css" href="/stylesheets/navbar.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/login.css">
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">LOGO</a>
+    </div>
+  </div>
+</nav>
+
+
+<div class="container">
+<div style="margin-top: 20px;">
+  <% include ./partials/flash %>
+</div>
+  
+
+
+      <form class="form-signin" action="/users/register" method="POST">
+        <h2 class="form-signin-heading">Zarejestruj się</h2>
+
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+
+        <label for="username" class="sr-only">Nazwa użytkownika</label>
+        <input name="username" type="text" id="inputUsername" class="form-control" placeholder="Nazwa użytkownika" required autofocus>
+
+        <label for="inputPassword" class="sr-only">Hasło</label>
+        <input name="password" type="password" id="inputPassword" class="form-control" placeholder="Hasło" required>
+
+        <label for="inputConfirmPassword" class="sr-only">Powtórz hasło</label>
+        <input name="confirmationPassword" type="password" id="inputConfirmPassword" class="form-control" placeholder="Powtórz hasło" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Zarejestruj się</button>
+        <br>
+        <a href="/users/login"><p>Masz już konto? <br> Zaloguj się teraz!</p></a>
+      </form>
+</div> <!-- /container -->
+
+
+<% include ./partials/footer %>
+
