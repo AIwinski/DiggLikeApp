@@ -83,7 +83,7 @@ router.route('/register')
       <br/><br/>
       Dokończ rejestrację klikając w poniższy link:
       <br/>
-      <a href="http://localhost:3000/users/verify/${secretToken}">http://localhost:3000/users/verify/${secretToken}</a>
+      <a href="https://aqueous-forest-41074.herokuapp.com/users/verify/${secretToken}">https://aqueous-forest-41074.herokuapp.com/users/verify/${secretToken}</a>
       <br/><br/>
       Miłego korzystania z serwisu!` 
 
