@@ -136,18 +136,22 @@ router.route('/login')
 
 router.get("/verify/:token", function(req, res){
     User.findOne({secretToken: req.params.token}, function(err, user){
+        console.log("=1=");
         if(err){
+          console.log("=2=");
           console.log(err);
           req.flash('error', 'Błąd! Nie znaleziono użytkownika.');
           res.redirect("/");
         } else {
             if(user){
+              console.log("=3=");
               user.active = true;
               user.secretToken = "";
               user.save();
               req.flash('success', 'Konto aktywne! Możesz się zalogować.');
               res.redirect('/users/login');
             } else {
+              console.log("=4=");
               req.flash('error', 'Błąd! Niepoprawna weryfikacja email!');
               res.redirect('/users/register');
             }
