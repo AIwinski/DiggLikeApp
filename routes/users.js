@@ -46,6 +46,7 @@ router.route('/register')
         res.redirect('/users/register');
         return;
       }
+      result.value.email = result.value.email.toLowerCase();
 
       // Checking if email is already taken
       const user = await User.findOne({ 'email': result.value.email });
@@ -140,11 +141,16 @@ router.get("/verify/:token", function(req, res){
           req.flash('error', 'Błąd! Nie znaleziono użytkownika.');
           res.redirect("/");
         } else {
-          user.active = true;
-          user.secretToken = "";
-          user.save();
-          req.flash('success', 'Konto aktywne! Możesz się zalogować.');
-          res.redirect('/users/login');
+            if(user){
+              user.active = true;
+              user.secretToken = "";
+              user.save();
+              req.flash('success', 'Konto aktywne! Możesz się zalogować.');
+              res.redirect('/users/login');
+            } else {
+              req.flash('error', 'Błąd! Niepoprawna weryfikacja email!');
+              res.redirect('/users/register');
+            }
         }
     });
 });

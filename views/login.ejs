@@ -31,7 +31,7 @@
 </div>
 
 
-      <form class="form-signin" action="/users/login" method="POST">
+      <form class="form-signin" action="/users/login" method="POST" id="form1">
         <h2 class="form-signin-heading">Zaloguj się</h2>
         <label for="inputEmail" class="sr-only">Email</label>
         <input name="email" type="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
@@ -42,11 +42,23 @@
             <input type="checkbox" value="remember-me"> Zapamiętaj mnie
           </label>
         </div> -->
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Zaloguj się</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="convert()">Zaloguj się</button>
         <br>
         <a href="/users/register"><p>Nie masz jeszcze konta? <br> Zarejetruj się teraz!</p></a>
       </form>
 </div> <!-- /container -->
+
+<script type="text/javascript">
+  function convert() 
+  {
+    var str;
+    str = document.getElementById("inputEmail");
+    str.value = (str.value.toLowerCase());
+    //get the form id and submit it
+    var form = document.getElementById("form1");
+    form.submit();
+  }  
+</script>
 
 
 
