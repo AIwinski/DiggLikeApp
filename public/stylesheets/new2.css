@@ -1,0 +1,39 @@
+img {
+	width: 100%;
+	height: 300px;
+	object-fit: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+textarea {
+	margin: 10px 0;
+}
+
+h2{
+	text-align: center;
+	margin: 10px auto;
+}
+
+.button-group {
+	text-align: center;
+	margin: 2px auto;
+}
+
+p {
+	text-align: center;
+}
+
+form{
+	margin-top: 40px;
+}
+
+#mainContainer {
+	border: 1px solid #DCDCDC;
+	margin-top: 100px;
+}
+
+.container {
+	display: none;
+}

@@ -1,0 +1,15 @@
+h3 {
+	text-align: center;
+}
+
+a {
+	text-align: center;
+}
+
+
+#cont {
+	z-index: 1;
+	position: relative;
+	text-align: center;
+	padding-top: 40vh;
+}

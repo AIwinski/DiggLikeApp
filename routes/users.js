@@ -5,7 +5,35 @@ const passport = require('passport');
 const randomstring = require('randomstring');
 const mailer = require('../misc/mailer');
 
+// var FacebookStrategy = require("passport-facebook");
+// var TwitterStrategy = require("passport-twitter");
+
 const User = require('../models/user');
+
+//FB and twitter
+// passport.use(new FacebookStrategy({
+//     clientID: "2063511227202651",
+//     clientSecret: "083af766a830b8bda355149f5e6fa00a",
+//     callbackURL: "http://localhost:3000/login/facebook/callback"
+//   },
+//   function(accessToken, refreshToken, profile, cb) {
+//     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
+//       return cb(err, user);
+//     });
+//   }
+// ));
+
+// passport.use(new TwitterStrategy({
+//     consumerKey: " vnqIBrOZUxp93PtjvZGVjK7Ax",
+//     consumerSecret: "ecfshBFT1Q9lmWJWP40Gpk8Q37MFPUeeRCzkKZS11b6mA1Spub",
+//     callbackURL: "http://localhost:3000/login/twitter/callback"
+//   },
+//   function(token, tokenSecret, profile, cb) {
+//     User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+//       return cb(err, user);
+//     });
+//   }
+// ));
 
 // Validation Schema
 const userSchema = Joi.object().keys({
@@ -14,6 +42,8 @@ const userSchema = Joi.object().keys({
   password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
   confirmationPassword: Joi.any().valid(Joi.ref('password')).required()
 });
+
+
 
 // Authorization 
 const isAuthenticated = (req, res, next) => {
@@ -108,6 +138,27 @@ router.route('/login')
     failureFlash: true
   }));
 
+/////////////////////////////////////////////////////// FB AND TWITTER
+//   router.get('/login/facebook',
+//   passport.authenticate('facebook'));
+
+// router.get('/auth/facebook/callback',
+//   passport.authenticate('facebook', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect('/');
+//   });
+
+
+// app.get('/auth/twitter',
+//   passport.authenticate('twitter'));
+
+// app.get('/auth/twitter/callback', 
+//   passport.authenticate('twitter', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect('/');
+//   });
 
 
 // router.route('/verify/:token')

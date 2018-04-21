@@ -7,7 +7,8 @@ const userSchema = new Schema({
     secretToken: String,
     active: Boolean,
     username: String,
-    password: String
+    password: String,
+    isAdmin: {type: Boolean, default: false}    
 });
 
 const User = mongoose.model('user', userSchema);

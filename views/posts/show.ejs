@@ -1,0 +1,173 @@
+<% include ../partials/header %>
+<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+
+<!-- <% include ../partials/navbar %> -->
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">LOGO</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">WSTECZ</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/24h/1">24h</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/48h/1">48h</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/72h/1">72h</a>
+        </li>
+        
+      </ul>
+      <form class="form-inline my-2 my-lg-0" id="searchForm" action="/posts/find" method="POST">
+        <input class="form-control mr-sm-2" type="search" placeholder="SZUKAJ" aria-label="Search" name="toFind">
+        <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">SZUKAJ</button> -->
+      </form>
+      <ul class="navbar-nav">
+        <% if (!currentUser) {%>
+          <li class="nav-item">
+            <a href="/users/login" class="btn btn-light">LOG/REJ</a>
+          </li>
+        <% } else { %>
+          <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+          <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+        <% } %>
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+
+<div class="container" style="margin-top: 80px;">
+	<% include ../partials/flash %>
+	<div class="row">
+		<div class="col-sm-12">
+           <div class="card" id="headerCard">
+            <div class="row">
+                <div class="col-md-8">
+                    <img src="<%= post.image%>" class="card-img-left" id="bigpic">
+                </div>
+	            <div class="col-md-4">
+	                <div class="card-body">
+	                	<p id="invisible" style="display: none"><%= post.link%></p>
+	                  <a href="#" id="openLink">
+	                    <h3 class="card-title"><%= post.title%> </h3>
+	                  <p class="card-text"><%= post.description%></p>
+	                  </a>
+	                </div>
+	                <div id="buttons">
+	                  <button id="<%= post._id%>" class="btn btn-lg vote"><i class="fa fa-thumbs-up"></i></button>
+                    <p><%= post.points%> pkt</p>
+	                </div>
+	            </div>
+	          </div> 
+	       </div>
+    	</div>
+	</div>
+	<div>
+		<form id="comment-form" method="POST" action="/posts/details/<%= post._id%>" class="form-inline">
+      <div class="form-group">
+  			<textarea id="comment" type="text" name="comment" class="form-control mb-2" maxlength="100" wrap="soft" rows="1" cols="40" style="overflow:auto; resize:none;"></textarea>
+        <span class="input-group-btn">
+          <% if(currentUser) { %>
+           <button id="submit" class="btn btn-sm mb-2">Dodaj komentarz</button>
+          <% } else { %>
+            <button disabled="true" title="Musisz się zalogować" id="submit" class="btn btn-sm mb-2">Dodaj komentarz</button>
+          <% } %>
+        </span>
+      </div>
+		</form>
+    
+	</div>
+  <div id="comments">
+    
+  </div>
+
+  <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+             <!--  <div class="page-header">
+                <h1><small class="pull-right"><%= comments.length%> komentarz</small> Comments </h1>
+              </div>  -->
+               <div class="comments-list">
+                <% for (var i = 0; i < comments.length; i++) { %>
+                       <div class="media">
+                          <div class="media-body">
+                            <h4 class="media-heading user_name"><%= comments[i].author.username%></h4>
+                             <p><p><%= comments[i].text %></p></p>
+                            
+                             <p><small><a href="">Like</a></small></p>
+                          </div>
+                          <p class="pull-right"><small><%= (Math.round((Date.now() -  comments[0].date)/36e5))%> godzin temu %></small></p>
+                      </div>
+                   <% } %>
+               </div>
+          </div>
+      </div>
+  </div>
+  
+
+	
+</div>
+
+<script type="text/javascript">
+
+    $("#submit").click(function(e){
+      e.preventDefault();
+      var data = {};
+      data.comment = $("#comment").val();
+      
+
+      $.ajax({
+        type: "POST",
+        url: /*window.location.origin +*/ $("#comment-form").attr("action"),
+        data: data,
+        success: function(data){
+          if(data.success){
+            $("#comments").apppend("<div class='media'><div class='media-body'><h4 class='media-heading user_name'>" + currentUser + "</h4><p>" + $("#comment").val() + "</p>  <p><small><a href=''>Like</a></p></div><p class='pull-right'><small>Przed chwilą</small></p></div>");
+            $("#comment").val("");
+          } else {
+            alert("blad przy dodawaniu komentarza");
+          }
+        },
+        error: function(){
+          alert("blont");
+        }
+      })
+
+    });
+
+
+	$("#openLink").click(function(){
+		var url = $("#invisible").text();
+		window.open(url);
+	});
+
+
+    $(".vote").click(function(e){
+      e.preventDefault();
+      var data = {
+        id: $(this).attr("id")
+      }
+      console.log(data);
+
+      $.ajax({
+        type: "POST",
+        url: window.location.origin + "/posts/vote/" + $(this).attr("id"),
+        dataType: "application",
+        data: data
+      });
+
+    });
+</script>
+
+
+<% include ../partials/footer %>

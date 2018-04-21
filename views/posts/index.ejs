@@ -1,0 +1,185 @@
+<% include ../partials/header %>
+<link rel="stylesheet" type="text/css" href="/stylesheets/postsIndex.css">
+
+<!-- <% include ../partials/navbar %> -->
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">LOGO</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/back">WSTECZ</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/24h/1">24h</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/48h/1">48h</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/72h/1">72h</a>
+        </li>
+        
+      </ul>
+      <form class="form-inline my-2 my-lg-0" id="searchForm" action="/posts/find" method="POST">
+        <input class="form-control mr-sm-2" type="search" placeholder="SZUKAJ" aria-label="Search" name="toFind">
+        <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">SZUKAJ</button> -->
+      </form>
+      <ul class="navbar-nav">
+        <% if (!currentUser) {%>
+          <li class="nav-item">
+            <a href="/users/login" class="btn btn-light">LOG/REJ</a>
+          </li>
+        <% } else { %>
+          <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+          <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+        <% } %>
+      </ul>
+      
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="container" id="mainContainer">
+  <div class="container" id="menuContainer">
+      <div class="table-responsive">
+        <table class="table">
+            <tr>
+              <% for(var i=0;i<categories.length;i++) {%>
+                <th><a href="/posts/<%= categories[i].name%>/alltime/1"><%= categories[i].text%></a></th>
+              <% } %>
+            </tr>
+        </table>
+      </div>
+  </div>
+
+  <% include ../partials/flash %>
+
+<div class="category">
+  <% if(category && category.length>0 && category.toLowerCase() != "all") { %>
+    <h2><%= category %></h2>
+  <% } %>
+</div>
+  
+
+  <div class="container">
+      <div class="row">
+
+         <% if(posts && posts.length > 0) { %>
+
+            <% for(var i=0; i<posts.length; i++) { %>
+              <div class="col-md-9 col-sm-12" id="article_card">
+                <div class="row">
+                  <div id="imag" class="col-md-6 align-self-center">
+                    <img src="<%= posts[i].image%>" id="imag">
+                  </div>
+                  <div id="desc" class="col-md-6 align-self-center">
+                    <a href="/posts/details/<%= posts[i]._id%>">
+                      <h3 class="card-title"><%= posts[i].title.substring(0,50)%></h3>
+                      <p class="card-text"><%= posts[i].description.substring(0,50)%></p>
+                      <p><%=  (Math.round((Date.now() -  posts[i].date)/36e5))%> godzin temu</p>
+
+
+                      <p><%= posts[i].points%> punktow</p>
+                    </a>
+                    <p>
+                    
+                    <% var upExists = false;%>
+                    <% var downExists = false;%>
+                    <% for(var j=0;j<posts[i].upvoters.length;j++) { %>
+                      <% if(currentUser && posts[i].upvoters[j].equals(currentUser._id)) { %>
+                        <% upExists = true%>
+                      <% } %>
+                    <% } %>
+                    <% for(var j=0;j<posts[i].downvoters.length;j++) { %>
+                      <% if(currentUser && posts[i].downvoters[j].equals(currentUser._id)) { %>
+                        <% downExists = true%>
+                      <% } %>
+                    <% } %>
+                    <% if(upExists && !downExists) { %>
+                      <span id="<%= posts[i]._id%>" class="ikony voteUp clicked"><i class="fa fa-arrow-up"></i></span>
+                      <span id="<%= posts[i]._id%>" class="ikony voteDown"><i class="fa fa-arrow-down"></i></span>
+                    <% } else if(!upExists && !downExists) { %>
+                      <span id="<%= posts[i]._id%>" class="ikony voteUp"><i class="fa fa-arrow-up"></i></span>
+                      <span id="<%= posts[i]._id%>" class="ikony voteDown"><i class="fa fa-arrow-down"></i></span>
+                    <% } else if(!upExists && downExists) { %>
+                      <span id="<%= posts[i]._id%>" class="ikony voteUp"><i class="fa fa-arrow-up"></i></span>
+                      <span id="<%= posts[i]._id%>" class="ikony voteDown clicked"><i class="fa fa-arrow-down"></i></span>
+                    <% } %>
+                    <% var favExists = false;%>
+                    <% for (var j = 0; j < posts[i].fav.length; j++) { %>
+                        <% if(currentUser && posts[i].fav[j].equals(currentUser._id)){%>
+                            <% favExists = true;%>
+                        <% } %>
+                    <% } %>
+                    <% if (favExists) { -%>
+                      <span class="ikony fav clicked" id="<%= posts[i]._id%>"><i class="fa fa-diamond"></i></span>
+                    <% } else { -%>
+                      <span class="ikony fav" id="<%= posts[i]._id%>"><i class="fa fa-diamond"></i></span>
+                    <% } -%>
+
+                    
+
+                    <span class="ikony"><a href="https://www.facebook.com/sharer/sharer.php?u=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[i]._id%>" target="_blank"><i class="fa fa-facebook-square"></i></a></span>
+                    <span class="ikony"><a class="twitter-share-button"
+  href="https://twitter.com/intent/tweet?text=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[i]._id%>" target="_blank"><i class="fa fa-twitter"></i></a></span>
+
+
+                  </p>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+
+          <% } else { %>
+              <h3 id="noResults">Brak wyników!</h3>
+          <% } %>         
+  </div>
+
+  <% if(posts && posts.length > 0) {%>
+    <div id="pagin">
+      <nav>
+        <p id="pageNumber">Strona <span id="currPage"><%= pages.curr%></span> / <span id="allPages"><%= pages.all%></span></p>
+        <ul class="pagination justify-content-center">
+          <li class="page-item"><a href="#" class="page-link" id="prev">Poprzednia</a></li>      
+          <li class="page-item"><a href="#" class="page-link" id="next">Następna</a></li> 
+        </ul>
+      </nav>
+    </div>
+<% } %>
+  
+
+</div>
+
+<script type="text/javascript" src="/js/buttons.js"></script>
+
+<script type="text/javascript">
+
+    
+
+      var curr = $("#currPage").text();
+      var all = $("#allPages").text();
+
+      if(parseInt(curr)>1){
+        var url = window.location.href.slice(window.location.href.lastIndexOf("/") ,window.location.href.lastIndexOf("/")- window.location.href.length) + (parseInt(curr) - 1).toString();
+        $("#prev").prop("href", url)
+      }
+
+      if(parseInt(curr) < parseInt(all)){
+        var url = window.location.href.slice(window.location.href.lastIndexOf("/") ,window.location.href.lastIndexOf("/")- window.location.href.length) + (parseInt(curr) + 1).toString();
+        $("#next").prop("href", url)
+      }
+
+</script>
+
+<% include ../partials/footer %>

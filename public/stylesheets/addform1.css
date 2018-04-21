@@ -1,0 +1,18 @@
+
+
+
+#div-add-form {
+	margin: 0 auto;
+    width: 60%;
+    min-width: 300px;
+    margin-top: 30vh;
+    text-align: center;
+}
+h1 {
+	margin-bottom: 10px;
+}
+
+input {
+	margin-top: 10px;
+	text-align: center;
+}

@@ -1,0 +1,25 @@
+<% include ../partials/header %>
+<link rel="stylesheet" type="text/css" href="/stylesheets/navbar.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/addform1.css">
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+	<div class="container">
+	  <a class="navbar-brand" href="/">LOGO</a>
+	  </div>
+	</div>
+</nav>
+
+
+
+<div class="container">
+	<div id="div-add-form">
+		<h1>Dodaj znalezisko z sieci!</h1>
+		  <form class="form-add" method="POST" action="/posts/adddetails">
+		  	<input type="text" name="link" placeholder="Tutaj wklej link" class="form-control" required="true">
+		  	<input class="btn btn-lg btn-primary btn-block" type="submit" value="Dodaj">
+		  </form>
+	</div>
+</div>
+
+<% include ../partials/footer %>
+

@@ -42,3 +42,8 @@ body {
 button[type="submit"] {
   margin-top: 10px;
 }
+
+#loginButtons {
+  text-align: center;
+  margin: 0 0;
+}

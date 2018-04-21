@@ -1,6 +1,6 @@
     <!-- Custom styles for this template -->
     <link rel="stylesheet" type="text/css" href="/stylesheets/navbar.css">
-
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&amp;subset=latin-ext" rel="stylesheet">
 
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
 	<div class="container">
@@ -14,18 +14,30 @@
 	      <li class="nav-item">
 	        <a class="nav-link" href="#">WSTECZ</a>
 	      </li>
-	      <li class="nav-item">
-	        <a class="nav-link" href="#">24h</a>
-	      </li>
-	      <li class="nav-item">
-	        <a class="nav-link" href="#">48h</a>
-	      </li>
-	      <li class="nav-item">
-	        <a class="nav-link" href="#">72h</a>
-	      </li>
+	      <form method="POST" action="/posts/time">
+	      	<li class="nav-item">
+	      		<input name="category" id="#invisible" style="display: none" value="<%= category%>">
+	      		<input name="time" id="#invisible" style="display: none" value="24h">
+		       <button class="timeButton" type="submit" class="nav-link" id="24h">24h</button>
+		    </li>
+	      </form>
+	      <form method="POST" action="/posts/time">
+	      	<li class="nav-item">
+	      		<input name="category" id="#invisible" style="display: none" value="<%= category%>">
+	      		<input name="time" id="#invisible" style="display: none" value="48h">
+		       <button class="timeButton" type="submit" class="nav-link" id="48h">48h</button>
+		    </li>
+	      </form>
+	      <form method="POST" action="/posts/time">
+	      	<li class="nav-item">
+	      		<input name="category" id="#invisible" style="display: none" value="<%= category%>">
+	      		<input name="time" id="#invisible" style="display: none" value="72h">
+		       <button class="timeButton" type="submit" class="nav-link" id="72h">72h</button>
+		    </li>
+	      </form>	
 	    </ul>
-	    <form class="form-inline my-2 my-lg-0" id="searchForm" action="/" method="POST">
-	      <input class="form-control mr-sm-2" type="search" placeholder="SZUKAJ" aria-label="Search">
+	    <form class="form-inline my-2 my-lg-0" id="searchForm" action="/posts/find" method="POST">
+	      <input class="form-control mr-sm-2" type="search" placeholder="SZUKAJ" aria-label="Search" name="toFind">
 	      <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">SZUKAJ</button> -->
 	    </form>
 	    <ul class="navbar-nav">
@@ -34,6 +46,7 @@
 			    	<a href="/users/login" class="btn btn-light">LOG/REJ</a>
 			    </li>
 	    	<% } else { %>
+	    		<a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
 		    	<a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
 		    <% } %>
 	    </ul>
@@ -41,4 +54,5 @@
 	  </div>
 	</div>
 </nav>
+
 
