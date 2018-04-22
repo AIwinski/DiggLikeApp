@@ -63,10 +63,49 @@
 	                  <p class="card-text"><%= post.description%></p>
 	                  </a>
 	                </div>
-	                <div id="buttons">
-	                  <button id="<%= post._id%>" class="btn btn-lg vote"><i class="fa fa-thumbs-up"></i></button>
-                    <p><%= post.points%> pkt</p>
-	                </div>
+	                <p>
+                        <% var upExists = false;%>
+                        <% var downExists = false;%>
+                        <% for(var j=0;j<posts[0].upvoters.length;j++) { %>
+                          <% if(currentUser && posts[0].upvoters[j].equals(currentUser._id)) { %>
+                            <% upExists = true%>
+                          <% } %>
+                        <% } %>
+                        <% for(var j=0;j<posts[0].downvoters.length;j++) { %>
+                          <% if(currentUser && posts[0].downvoters[j].equals(currentUser._id)) { %>
+                            <% downExists = true%>
+                          <% } %>
+                        <% } %>
+                        <% if(upExists && !downExists) { %>
+                          <span id="<%= posts[0]._id%>" class="ikony voteUp clicked"><i class="fa fa-arrow-up"></i></span>
+                          <span id="<%= posts[0]._id%>" class="ikony voteDown"><i class="fa fa-arrow-down"></i></span>
+                        <% } else if(!upExists && !downExists) { %>
+                          <span id="<%= posts[0]._id%>" class="ikony voteUp"><i class="fa fa-arrow-up"></i></span>
+                          <span id="<%= posts[0]._id%>" class="ikony voteDown"><i class="fa fa-arrow-down"></i></span>
+                        <% } else if(!upExists && downExists) { %>
+                          <span id="<%= posts[0]._id%>" class="ikony voteUp"><i class="fa fa-arrow-up"></i></span>
+                          <span id="<%= posts[0]._id%>" class="ikony voteDown clicked"><i class="fa fa-arrow-down"></i></span>
+                        <% } %>
+                        <% var favExists = false;%>
+                        <% for (var j = 0; j < posts[0].fav.length; j++) { %>
+                            <% if(currentUser && posts[0].fav[j].equals(currentUser._id)){%>
+                                <% favExists = true;%>
+                            <% } %>
+                        <% } %>
+                        <% if (favExists) { -%>
+                          <span class="ikony fav clicked" id="<%= posts[0]._id%>"><i class="fa fa-diamond"></i></span>
+                        <% } else { -%>
+                          <span class="ikony fav" id="<%= posts[0]._id%>"><i class="fa fa-diamond"></i></span>
+                        <% } -%>
+
+                        
+
+                        <span class="ikony"><a href="https://www.facebook.com/sharer/sharer.php?u=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[0]._id%>" target="_blank"><i class="fa fa-facebook-square"></i></a></span>
+                        <span class="ikony"><a class="twitter-share-button"
+      href="https://twitter.com/intent/tweet?text=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[0]._id%>" target="_blank"><i class="fa fa-twitter"></i></a></span>
+
+
+                      </p>
 	            </div>
 	          </div> 
 	       </div>
@@ -117,7 +156,7 @@
 
 	
 </div>
-
+<script type="text/javascript" src="/js/buttons.js"></script>
 <script type="text/javascript">
 
     $("#submit").click(function(e){
