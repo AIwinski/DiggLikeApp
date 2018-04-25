@@ -1,3 +1,8 @@
+ $(window).ready(function(){
+  $(".fb").attr("href",  "https://www.facebook.com/sharer/sharer.php?u=" + window.location.hostname + "%2Fposts%2Fdetails%2F" + $(".fb").attr("id"))
+  $(".twitter").attr("href", "https://twitter.com/intent/tweet?text=" + window.location.hostname + "%2Fposts%2Fdetails%2F" + $(".twitter").attr("id"));
+ });
+
  $(function(){
     $(".voteUp").click(function(e){
       e.preventDefault();
@@ -18,18 +23,23 @@
         data: data,
         success: function(data){
           if(data.success){
+            var pkt = data.points;
+
             if($(up).hasClass("clicked")){
               $(up).removeClass("clicked");
             } else {
               $(up).addClass("clicked");
               $(down).removeClass("clicked");
-            }
+            } 
+            
+            
+            $("#punkty").text(pkt + " punktów");
 
           } else {
           }
         },
         error: function(){
-          alert("blad");
+          //alert("blad");
         }
       });
 
@@ -55,17 +65,21 @@
         data: data,
         success: function(data){
           if(data.success){
+            var pkt = data.points;
             if($(down).hasClass("clicked")){
               $(down).removeClass("clicked");
             } else {
               $(down).addClass("clicked");
               $(up).removeClass("clicked");
-            }
+            } 
+            
+            $("#punkty").text(pkt + " punktów");
+
           } else {
           }
         },
         error: function(){
-          alert("blad");
+          //alert("blad");
         }
       });
 
@@ -96,8 +110,12 @@
               }
             },
             error: function(){
-              alert("blad");
+              //alert("blad");
             }
           });
       });
+
+
+
+       
   });

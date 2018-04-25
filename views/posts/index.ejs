@@ -17,16 +17,28 @@
         <li class="nav-item">
           <a class="nav-link" href="/back">WSTECZ</a>
         </li>
-        
-        <li class="nav-item">
+        <% if (category.toLowerCase() == "ulubione") { -%>
+          <li class="nav-item">
+          <a class="nav-link" href="/posts/all/24h/1">24h</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/posts/all/48h/1">48h</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/posts/all/72h/1">72h</a>
+          </li>
+        <% } else { -%>
+          <li class="nav-item">
           <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/24h/1">24h</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/48h/1">48h</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/72h/1">72h</a>
-        </li>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/48h/1">48h</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/72h/1">72h</a>
+          </li>
+        <% } -%>
+        
         
       </ul>
       <form class="form-inline my-2 my-lg-0" id="searchForm" action="/posts/find" method="POST">
@@ -39,8 +51,23 @@
             <a href="/users/login" class="btn btn-light">LOG/REJ</a>
           </li>
         <% } else { %>
-          <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
-          <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+          <li class="nav-item">
+            <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+          </li> -->
+          
+          <li class="nav-item dropdown">
+            <a class="dropdown-toggle btn btn-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/users/logout">Wyloguj</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/posts/fav">Ulubione</a>
+            </div>
+          </li>
         <% } %>
       </ul>
       
@@ -86,13 +113,11 @@
                   <div id="desc" class="col-md-6 align-self-center">
                     <a href="/posts/details/<%= posts[i]._id%>">
                       <h3 class="card-title"><%= posts[i].title.substring(0,50)%></h3>
-                      <p class="card-text"><%= posts[i].description.substring(0,50)%></p>
-                      <p><%=  (Math.round((Date.now() -  posts[i].date)/36e5))%> godzin temu</p>
+                      <p class="card-text"><%= posts[i].description.substring(0,50)%>...</p>
+                      <p><%=  (Math.round((Date.now() -  posts[i].date)/36e5))%> godzin temu <span id="punkty"><%= posts[i].points%> punktów</span></p>
 
-
-                      <p><%= posts[i].points%> punktow</p>
                     </a>
-                    <p>
+                    <div class="panel">
                     
                     <% var upExists = false;%>
                     <% var downExists = false;%>
@@ -130,12 +155,18 @@
 
                     
 
-                    <span class="ikony"><a href="https://www.facebook.com/sharer/sharer.php?u=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[i]._id%>" target="_blank"><i class="fa fa-facebook-square"></i></a></span>
-                    <span class="ikony"><a class="twitter-share-button"
-  href="https://twitter.com/intent/tweet?text=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[i]._id%>" target="_blank"><i class="fa fa-twitter"></i></a></span>
+                    <span class="ikony"><a id="<%= posts[i]._id%>" href="#" target="_blank" class="fb"><i class="fa fa-facebook-square"></i></a></span>
+                    <span class="ikony"><a id="<%= posts[i]._id%>" class="twitter-share-button twitter" href="#" target="_blank"><i class="fa fa-twitter"></i></a></span>
+
+                <% if(currentUser && (currentUser.isAdmin || posts[0].author.id.equals(currentUser._id))) { %>
+                            <form action="/posts/<%= posts[0]._id%>?_method=DELETE" method="POST" id="delete" style="display: inline;">
+                              <span class="ikony" id="<%= posts[0]._id%>"><a onclick="$('#delete').submit();"><i class="fa fa-trash"></i></a></span>
+                            </form>
+                            <span class="ikony"><a href="/posts/edit/<%= posts[0]._id%>"><i class="fa fa-edit"></i></a></span>
+                        <% } %>
 
 
-                  </p>
+                  </div>
                   </div>
                 </div>
               </div>

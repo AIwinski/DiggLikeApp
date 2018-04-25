@@ -3,6 +3,10 @@
 	border: none;
 }
 
+h3 {
+	font-size: 23px;
+}
+
 #menuContainer{
 	padding-left: 60px;
 	border: none;
@@ -134,4 +138,13 @@ a:hover {
 #submit {
 	display: inline-block;
 	margin: 3px;
+}
+
+.panel {
+	margin: 0 auto;
+	text-align: center;
+}
+
+#punkty {
+	float: right;
 }

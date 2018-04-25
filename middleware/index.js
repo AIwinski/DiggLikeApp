@@ -45,7 +45,7 @@ middlewareObj.checkCommentOwnership = function(req, res, next){ //sprawdza czy z
 middlewareObj.checkPostOwnership = function(req, res, next){ //sprawdza czy zalogowany i czy jego post
 	//is user logged in?
 	if (req.isAuthenticated()) {
-		Post.findById(req.params.comment_id, function(err, foundComment){
+		Post.findById(req.params.postId, function(err, foundPost){
 			if(err) {
 				req.flash("error", "Something went wrong");
 				res.redirect("back");
@@ -53,18 +53,17 @@ middlewareObj.checkPostOwnership = function(req, res, next){ //sprawdza czy zalo
 				if(req.user.isAdmin == true){
 					next();
 				}
-				//does the user own the comment?
 				else if (foundPost.author.id.equals(req.user._id)) { //tu musi byc equals bo jedno to jest string a drugie to jest objekt mongoose
 					next();
 				} else {
-					req.flash("error", "You dont have permission to do that");
+					req.flash("error", "Nie masz do tego uprawnień!");
 					res.redirect("back"); //tak sie robi redirecta wstecz
 				}
 				
 			}
 		});
 	} else {
-		req.flash("error", "You have to be logged in to do that");
+		req.flash("error", "Musisz sie najpierw zalogować!");
 		res.redirect("back");
 	}
  

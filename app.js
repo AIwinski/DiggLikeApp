@@ -24,7 +24,7 @@ var postRoutes = require("./routes/posts");
 var userRoutes = require("./routes/users");
 
 //mongoose.connect("mongodb://localhost/zlecenie4");
-
+mongoose.connect("mongodb://artur:123456@ds121299.mlab.com:21299/zlecenie");
 
 var Comment = require("./models/comment");
 var User = require("./models/user");

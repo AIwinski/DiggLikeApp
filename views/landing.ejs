@@ -44,10 +44,24 @@
             <a href="/users/login" class="btn btn-light">LOG/REJ</a>
           </li>
         <% } else { %>
-          <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
-          <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+          <li class="nav-item">
+            <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+          </li> -->
+          
+          <li class="nav-item dropdown">
+            <a class="dropdown-toggle btn btn-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/users/logout">Wyloguj</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/posts/fav">Ulubione</a>
+            </div>
+          </li>
         <% } %>
-      </ul>
       
     </div>
   </div>
@@ -91,11 +105,11 @@
                 <div class="col-md-4">
                     <div class="card-body">
                       <a href="/posts/details/<%= posts[0]._id%>">
-                        <h3 class="card-title"><%= posts[0].title.substring(0,100)%> </h3>
-                      <p class="card-text"><%= posts[0].description.substring(0,100)%></p>
-                      <p><%= (Math.round((Date.now() -  posts[0].date)/36e5))%> godzin temu</p>
+                        <h3 class="card-title"><%= posts[0].title%> </h3>
+                      <p class="card-text"><%= posts[0].description.substring(0,50)%>...</p>
+                      <p><%= (Math.round((Date.now() -  posts[0].date)/36e5))%> godzin temu<span id="punkty"><%= posts[0].points%> punktów</span></p>
                       </a>
-                      <p>
+                      <div class="panel">
                         <% var upExists = false;%>
                         <% var downExists = false;%>
                         <% for(var j=0;j<posts[0].upvoters.length;j++) { %>
@@ -132,12 +146,18 @@
 
                         
 
-                        <span class="ikony"><a href="https://www.facebook.com/sharer/sharer.php?u=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[0]._id%>" target="_blank"><i class="fa fa-facebook-square"></i></a></span>
-                        <span class="ikony"><a class="twitter-share-button"
-      href="https://twitter.com/intent/tweet?text=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[0]._id%>" target="_blank"><i class="fa fa-twitter"></i></a></span>
+                        <span class="ikony"><a id="<%= posts[0]._id%>" href="#" target="_blank" class="fb"><i class="fa fa-facebook-square"></i></a></span>
+                    <span class="ikony"><a id="<%= posts[0]._id%>" class="twitter-share-button twitter" href="#" target="_blank"><i class="fa fa-twitter"></i></a></span>
+
+                        <% if(currentUser && (currentUser.isAdmin || posts[0].author.id.equals(currentUser._id))) { %>
+                            <form action="/posts/<%= posts[0]._id%>?_method=DELETE" method="POST" id="delete" style="display: inline;">
+                              <span class="ikony" id="<%= posts[0]._id%>"><a onclick="$('#delete').submit();"><i class="fa fa-trash"></i></a></span>
+                            </form>
+                            <span class="ikony"><a href="/posts/edit/<%= posts[0]._id%>"><i class="fa fa-edit"></i></a></span>
+                        <% } %>
 
 
-                      </p>
+                      </div>
                     </div>
                 </div>
               </div> 
@@ -149,11 +169,11 @@
               <img class="card-img-top" src="<%= posts[i].image%>" id="smallpic">
                 <div class="card-body">
                   <a href="/posts/details/<%= posts[i]._id%>">
-                    <h3 class="card-title"><%= posts[i].title.substring(0,50)%>...</h3>
+                    <h3 class="card-title"><%= posts[i].title%></h3>
                     <p class="card-text"><%= posts[i].description.substring(0,50)%>...</p>
-                    <p><%= (Math.round((Date.now() -  posts[i].date)/36e5))%> godzin temu</p>
+                    <p><%= (Math.round((Date.now() -  posts[i].date)/36e5))%> godzin temu<span id="punkty"><%= posts[i].points%> punktów</span></p>
                   </a>
-                  <p>
+                  <div class="panel">
                     
                     <% var upExists = false;%>
                     <% var downExists = false;%>
@@ -191,17 +211,23 @@
 
                     
 
-                    <span class="ikony"><a href="https://www.facebook.com/sharer/sharer.php?u=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[i]._id%>" target="_blank"><i class="fa fa-facebook-square"></i></a></span>
-                    <span class="ikony"><a class="twitter-share-button"
-  href="https://twitter.com/intent/tweet?text=www.strona.pl%2Fposts%2Fdetails%2F<%= posts[i]._id%>" target="_blank"><i class="fa fa-twitter"></i></a></span>
+                    <span class="ikony"><a id="<%= posts[i]._id%>" href="#" target="_blank" class="fb"><i class="fa fa-facebook-square"></i></a></span>
+                    <span class="ikony"><a id="<%= posts[i]._id%>" class="twitter-share-button twitter" href="#" target="_blank"><i class="fa fa-twitter"></i></a></span>
+
+                  <% if(currentUser && (currentUser.isAdmin || posts[0].author.id.equals(currentUser._id))) { %>
+                            <form action="/posts/<%= posts[0]._id%>?_method=DELETE" method="POST" id="delete" style="display: inline;">
+                              <span class="ikony" id="<%= posts[0]._id%>"><a onclick="$('#delete').submit();"><i class="fa fa-trash"></i></a></span>
+                            </form>
+                            <span class="ikony"><a href="/posts/edit/<%= posts[0]._id%>"><i class="fa fa-edit"></i></a></span>
+                        <% } %>
 
 
-                  </p>
+                  </div>
                 </div>
               <div>
                         
                 
-                <p id="points"><%= posts[i].points%> pkt</p>
+                
               </div>
           </div>
         <% } %>

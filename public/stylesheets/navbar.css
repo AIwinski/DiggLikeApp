@@ -50,3 +50,8 @@ body {
 .timeButton:hover {
 	color: #888888;
 }
+
+.panel {
+	margin: 0 auto;
+	text-align: center;
+}

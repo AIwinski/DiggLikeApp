@@ -64,10 +64,26 @@ router.delete("/:postId", middleware.checkPostOwnership, function(req, res){
 	});
 });
 
-// router.put("/:postId", function(req, res){
-// 	var id = req.params.postId;
-// 	Post.findByIdAndUpdate(id, )
-// });
+router.put("/:postId", middleware.checkPostOwnership, function(req, res){
+	var id = req.params.postId;
+	var post = {
+		title: req.body.title,
+		description: req.body.description,
+		image: req.body.image,
+		category: req.body.category.toLowerCase(),
+		date: Date.now(),
+		link: req.body.link
+	} 
+	Post.findByIdAndUpdate(id, post ,function(err, updatedPost){
+		if(err){
+			console.log(err);
+			req.flash("error", "Wystąpił błąd");
+			res.redirect("/");
+		} else {
+
+		}
+	});
+});
 
 router.post("/adddetails", middleware.isLoggedIn, function(req, res){
 	var link = req.body.link.toString();
@@ -115,6 +131,10 @@ router.post("/find", function(req, res){
 	});
 });
 
+router.get("/edit/:id", function(req, res){
+	res.send("edit")
+});
+
 router.post("/fav", middleware.isLoggedIn, function(req, res){
 	var id = req.body.id;
 	var userId = req.user._id;
@@ -138,6 +158,31 @@ router.post("/fav", middleware.isLoggedIn, function(req, res){
 			}
 			foundPost.save();
 			res.send({success: true});
+		}
+	});
+});
+
+router.get("/fav", middleware.isLoggedIn, function(req, res){
+	var pages = {
+		all: 1,
+		curr: 1
+	}
+	Post.find({}, function(err, posts){
+		if(err){
+			console.log(err);
+			req.flash("error", "Wystąpił błąd");
+			res.redirect("/");
+		} else {
+			var results = [];
+			posts.forEach(function(post){
+				for(var i=0;i<post.fav.length; i++){
+					if(post.fav[i].equals(req.user._id)){
+						results.push(post);
+					}
+				}
+			});
+			results.sort(compareDates);
+			res.render("posts/index", {posts: results, category: "Ulubione", categories: categories, pages: pages});
 		}
 	});
 });
@@ -212,7 +257,7 @@ router.post("/vote/:id/:status", middleware.isLoggedIn ,function(req, res){
 				}
 			}
 			foundPost.save();
-			res.send({success: true});
+			res.send({success: true, points: foundPost.points});
 		}
 	});
 

@@ -46,8 +46,23 @@
 			    	<a href="/users/login" class="btn btn-light">LOG/REJ</a>
 			    </li>
 	    	<% } else { %>
-	    		<a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
-		    	<a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+		    	<li class="nav-item">
+		            <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+		          </li>
+		          <!-- <li class="nav-item">
+		            <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
+		          </li> -->
+		          
+		          <li class="nav-item dropdown">
+		            <a class="dropdown-toggle btn btn-light" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		              
+		            </a>
+		            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+		              <a class="dropdown-item" href="/users/logout">Wyloguj</a>
+		              <div class="dropdown-divider"></div>
+		              <a class="dropdown-item" href="/posts/fav">Ulubione</a>
+		            </div>
+		          </li>
 		    <% } %>
 	    </ul>
 	    
