@@ -16,6 +16,7 @@
       }
       var up = "#" + data.id + ".voteUp";
       var down = "#" + data.id + ".voteDown";
+      var punkty = "#" + data.id + ".punkty";
 
       $.ajax({
         type: "POST",
@@ -33,7 +34,7 @@
             } 
             
             
-            $("#punkty").text(pkt + " punktów");
+            $(punkty).text(pkt + " punktów");
 
           } else {
           }
@@ -58,6 +59,7 @@
       
       var up = "#" + data.id + ".voteUp";
       var down = "#" + data.id + ".voteDown";
+      var punkty = "#" + data.id + ".punkty";
 
       $.ajax({
         type: "POST",
@@ -73,7 +75,7 @@
               $(up).removeClass("clicked");
             } 
             
-            $("#punkty").text(pkt + " punktów");
+            $(punkty).text(pkt + " punktów");
 
           } else {
           }
