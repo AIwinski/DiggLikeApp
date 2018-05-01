@@ -91,15 +91,19 @@ router.post("/adddetails", /*middleware.isLoggedIn,*/ function(req, res){
 	var desc;
 
 	var link = req.body.link.toString();
-	console.log(link);
+	//console.log(link);
 	link.replace(/\s/g, "");
 	if(!link || link.length===0){
 		res.render("posts/wrongLink");
 	}
 
 	scrapeit(link, {
-	    title: {
+	    title1: {
 	    	selector: "article h1",
+	    	textteq: 1
+	    },
+	    title2: {
+	    	selector: "article h2",
 	    	textteq: 1
 	    },
 	    desc: {
@@ -107,7 +111,11 @@ router.post("/adddetails", /*middleware.isLoggedIn,*/ function(req, res){
 	    	textteq: 1
 	    }
 	}).then(({ data, response }) => {
-	    title = data.title.substring(0, 150).replace(/(\r\n\t|\n|\r\t)/gm, "");
+		if(data.title1.length > 2){
+			title = data.title1.substring(0, 150).replace(/(\r\n\t|\n|\r\t)/gm, "");
+		} else {
+			title = data.title2.substring(0, 150).replace(/(\r\n\t|\n|\r\t)/gm, "");
+		}
 	    desc = data.desc.substring(0, 500).replace(/(\r\n\t|\n|\r\t)/gm, "");
 
 	    var scraper = new Scraper(link);
@@ -118,7 +126,7 @@ router.post("/adddetails", /*middleware.isLoggedIn,*/ function(req, res){
 	      var uniqueImages = images.filter(function(item, pos) {
 	          return images.indexOf(item) == pos;
 	      })
-	      console.log(title  + " " + desc);
+	      //console.log(title  + " " + desc);
 	      res.render("posts/new2", {images: uniqueImages, link: link, title: title, desc: desc});
 	    }, function(){
 	      res.render("posts/wrongLink");
