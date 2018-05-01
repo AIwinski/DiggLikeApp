@@ -18,7 +18,7 @@ require('./config/passport');
 
 mongoose.Promise = global.Promise;
 
-var commentRoutes = require("./routes/comments");
+//var commentRoutes = require("./routes/comments");
 var indexRoutes = require("./routes/index");
 var postRoutes = require("./routes/posts");
 var userRoutes = require("./routes/users");
