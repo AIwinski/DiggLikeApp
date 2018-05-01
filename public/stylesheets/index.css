@@ -148,3 +148,7 @@ a:hover {
 .punkty {
 	float: right;
 }
+
+.nav-link {
+	font-weight: 600;
+}

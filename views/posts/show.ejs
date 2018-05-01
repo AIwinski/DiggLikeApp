@@ -12,9 +12,9 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="#">WSTECZ</a>
-        </li>
+        </li> -->
         
         <li class="nav-item">
           <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/24h/1">24h</a>
@@ -81,10 +81,10 @@
 	                	<p id="invisible" style="display: none"><%= post.link%></p>
 	                  <a href="#" id="openLink">
 	                    <h3 class="card-title"><%= post.title%> </h3>
-	                  <p class="card-text"><%= post.description%></p>
+	                     <p class="card-text"><%= post.description%>...</p>
 	                  </a>
 	                </div>
-	                <p>
+	                <div class="panel">
                         <% var upExists = false;%>
                         <% var downExists = false;%>
                         <% for(var j=0;j<post.upvoters.length;j++) { %>
@@ -126,7 +126,7 @@
       href="https://twitter.com/intent/tweet?text=www.strona.pl%2Fposts%2Fdetails%2F<%= post._id%>" target="_blank"><i class="fa fa-twitter"></i></a></span>
 
 
-                      </p>
+                      </div>
 	            </div>
 	          </div> 
 	       </div>

@@ -23,7 +23,7 @@ function Image(image, address){
 	//this.address = url.resolve(address, at.src);
 	this.address = at.src;
 	this.fromAddress = address;
-	console.log(at.src);
+	//console.log(at.src);
 }
 
 Image.prototype.save = function(callback){

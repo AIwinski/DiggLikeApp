@@ -40,10 +40,10 @@
 				<input type="text" name="image" value="<%= images[0]%>" id="imgHandler" style="display: none;">
 				<input type="text" name="link" value="<%= link%>" style="display: none;">
 				<div class="form-group">
-					<textarea class="form-control" type="text" name="title" required="true" placeholder="Tutaj wpisz tytul znaleziska z internetu" maxlength="150"></textarea>
+					<textarea class="form-control" type="text" name="title" required="true" placeholder="Tutaj wpisz tytul znaleziska z internetu" maxlength="150"><%= title%></textarea>
 				</div>
 				<div class="form-group">
-					<textarea class="form-control" type="text" name="description" required="true" placeholder="Opisz w kilku zdaniach czego dotyczy Twoje znalezisko" maxlength="500"></textarea>
+					<textarea class="form-control" type="text" name="description" required="true" placeholder="Opisz w kilku zdaniach czego dotyczy Twoje znalezisko" maxlength="470" ><%= desc%></textarea>
 				</div>
 				<div class="form-group">
 					<select class="form-control" name="category">
@@ -51,6 +51,7 @@
 						<option value="Wydarzenia">Wydarzenia</option>
 						<option value="filmy">Filmy</option>
 						<option value="ksiazki">Książki</option>
+						<option value="komentarze">Komentarze</option>
 					</select>
 				</div>
 				<div class="form-group">

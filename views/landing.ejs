@@ -19,9 +19,9 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="/back">WSTECZ</a>
-        </li>
+        </li> -->
         
         <li class="nav-item">
           <a class="nav-link" href="/posts/all/24h/1">24h</a>
@@ -81,7 +81,7 @@
         <table class="table">
             <tr>
               <% for(var i=0;i<categories.length;i++) {%>
-                <th><a href="/posts/<%= categories[i].name%>/alltime/1"><%= categories[i].text%></a></th>
+                <th><a href="/posts/<%= categories[i].name%>/alltime/1"><%= categories[i].text.toUpperCase()%></a></th>
               <% } %>
             </tr>
         </table>
@@ -106,7 +106,7 @@
                     <div class="card-body">
                       <a href="/posts/details/<%= posts[0]._id%>">
                         <h3 class="card-title"><%= posts[0].title%> </h3>
-                      <p class="card-text"><%= posts[0].description.substring(0,50)%>...</p>
+                      <p class="card-text"><%= posts[0].description.substring(0,150)%></p>
                       <p><%= (Math.round((Date.now() -  posts[0].date)/36e5))%> godzin temu<span id="<%= posts[0]._id%>" class="punkty"><%= posts[0].points%> punktów</span></p>
                       </a>
                       <div class="panel">
@@ -170,7 +170,7 @@
                 <div class="card-body">
                   <a href="/posts/details/<%= posts[i]._id%>">
                     <h3 class="card-title"><%= posts[i].title%></h3>
-                    <p class="card-text"><%= posts[i].description.substring(0,50)%>...</p>
+                    <p class="card-text"><%= posts[i].description.substring(0,80)%>...</p>
                     <p><%= (Math.round((Date.now() -  posts[i].date)/36e5))%> godzin temu<span id="<%= posts[i]._id%>" class="punkty"><%= posts[i].points%> punktów</span></p>
                   </a>
                   <div class="panel">

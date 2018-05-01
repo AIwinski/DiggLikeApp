@@ -136,3 +136,7 @@ th {
 	text-align: center;
 	margin: 0 auto;
 }
+
+.nav-link {
+	font-weight: 600;
+}

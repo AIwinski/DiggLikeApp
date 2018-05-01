@@ -5,6 +5,7 @@ var middleware = require("../middleware/index");
 var Post = require("../models/post");
 var User = require("../models/user");
 var Comment = require("../models/comment");
+var scrapeit = require("scrape-it");
 
 
 var Scraper = require('../middleware/scraper');
@@ -85,7 +86,10 @@ router.put("/:postId", middleware.checkPostOwnership, function(req, res){
 	});
 });
 
-router.post("/adddetails", middleware.isLoggedIn, function(req, res){
+router.post("/adddetails", /*middleware.isLoggedIn,*/ function(req, res){
+	var title;
+	var desc;
+
 	var link = req.body.link.toString();
 	console.log(link);
 	link.replace(/\s/g, "");
@@ -93,18 +97,33 @@ router.post("/adddetails", middleware.isLoggedIn, function(req, res){
 		res.render("posts/wrongLink");
 	}
 
-	var scraper = new Scraper(link);
- 	var images = [];
-  	scraper.scrape(function(image) {
-     	images.push(image.address);
-    }, function(){
-      var uniqueImages = images.filter(function(item, pos) {
-          return images.indexOf(item) == pos;
-      })
-      res.render("posts/new2", {images: uniqueImages, link: link});
-    }, function(){
-      res.render("posts/wrongLink");
-    });
+	scrapeit(link, {
+	    title: {
+	    	selector: "article h1",
+	    	textteq: 1
+	    },
+	    desc: {
+	    	selector: "article p",
+	    	textteq: 1
+	    }
+	}).then(({ data, response }) => {
+	    title = data.title.substring(0, 150).replace(/(\r\n\t|\n|\r\t)/gm, "");
+	    desc = data.desc.substring(0, 500).replace(/(\r\n\t|\n|\r\t)/gm, "");
+
+	    var scraper = new Scraper(link);
+	 	var images = [];
+	  	scraper.scrape(function(image) {
+	     	images.push(image.address);
+	    }, function(){
+	      var uniqueImages = images.filter(function(item, pos) {
+	          return images.indexOf(item) == pos;
+	      })
+	      console.log(title  + " " + desc);
+	      res.render("posts/new2", {images: uniqueImages, link: link, title: title, desc: desc});
+	    }, function(){
+	      res.render("posts/wrongLink");
+	    });
+	});
 });
 
 router.post("/find", function(req, res){

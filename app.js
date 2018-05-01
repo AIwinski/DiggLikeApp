@@ -67,7 +67,7 @@ app.use(function(req, res, next){
 
 //DO EDYCJI=======================================================
 
-app.use("/posts/comments", commentRoutes);
+//app.use("/posts/comments", commentRoutes);
 app.use(indexRoutes);
 app.use("/posts", postRoutes);
 app.use('/users', require('./routes/users'));
