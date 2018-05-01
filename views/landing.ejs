@@ -106,9 +106,11 @@
                     <div class="card-body">
                       <a href="/posts/details/<%= posts[0]._id%>">
                         <h3 class="card-title"><%= posts[0].title%> </h3>
-                      <p class="card-text"><%= posts[0].description.substring(0,150)%></p>
-                      <p><%= (Math.round((Date.now() -  posts[0].date)/36e5))%> godzin temu<span id="<%= posts[0]._id%>" class="punkty"><%= posts[0].points%> punktów</span></p>
+                        <p class="card-text"><%= posts[0].description.substring(0,150)%></p>
                       </a>
+                      <p><%= (Math.round((Date.now() -  posts[0].date)/36e5))%> godzin temu<span id="<%= posts[0]._id%>" class="punkty"><%= posts[0].points%> punktów</span></p>
+                      <p>Dodano przez: <%= posts[0].author.username%></p>
+                      
                       <div class="panel">
                         <% var upExists = false;%>
                         <% var downExists = false;%>
@@ -172,6 +174,7 @@
                     <h3 class="card-title"><%= posts[i].title%></h3>
                     <p class="card-text"><%= posts[i].description.substring(0,80)%>...</p>
                     <p><%= (Math.round((Date.now() -  posts[i].date)/36e5))%> godzin temu<span id="<%= posts[i]._id%>" class="punkty"><%= posts[i].points%> punktów</span></p>
+                    <p>Dodano przez: <%= posts[i].author.username%></p>
                   </a>
                   <div class="panel">
                     

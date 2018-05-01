@@ -83,6 +83,8 @@
 	                    <h3 class="card-title"><%= post.title%> </h3>
 	                     <p class="card-text"><%= post.description%>...</p>
 	                  </a>
+                    <p><%=  (Math.round((Date.now() -  post.date)/36e5))%> godzin temu <span id="<%= post._id%>" class="punkty"><%= post.points%> punktów</span></p>
+                      <p>Dodano przez: <%= post.author.username%></p>
 	                </div>
 	                <div class="panel">
                         <% var upExists = false;%>
