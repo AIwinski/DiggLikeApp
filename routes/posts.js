@@ -12,7 +12,7 @@ var Scraper = require('../middleware/scraper');
 
 var categories = require("../config/categories");
 
-var numberOfPostsOnPage = 4;//podzielne przez 3 + 1
+var numberOfPostsOnPage = 7;//podzielne przez 3 + 1
 
 router.get("/", function(req, res){
 	res.redirect("/");
@@ -21,9 +21,6 @@ router.get("/", function(req, res){
 router.get("/new", middleware.isLoggedIn, function(req, res){
 	res.render("posts/new");
 });
-
-
-
 
 
 router.post("/", middleware.isLoggedIn, function(req, res){
@@ -86,7 +83,7 @@ router.put("/:postId", middleware.checkPostOwnership, function(req, res){
 	});
 });
 
-router.post("/adddetails", /*middleware.isLoggedIn,*/ function(req, res){
+router.post("/adddetails", middleware.isLoggedIn, function(req, res){
 	var title;
 	var desc;
 
@@ -106,17 +103,41 @@ router.post("/adddetails", /*middleware.isLoggedIn,*/ function(req, res){
 	    	selector: "article h2",
 	    	textteq: 1
 	    },
+	    title3: {
+	    	selector: "h1",
+	    	textteq: 1
+	    },
 	    desc: {
 	    	selector: "article p",
 	    	textteq: 1
+	    },
+	    desc2: {
+	    	selector: "p",
+	    	textteq: 1
 	    }
 	}).then(({ data, response }) => {
-		if(data.title1.length > 2){
-			title = data.title1.substring(0, 150).replace(/(\r\n\t|\n|\r\t)/gm, "");
+		if(data.title1.length > 1){
+			title = data.title1;
+		} else if (data.title2.length > 1){
+			title = data.title2;
 		} else {
-			title = data.title2.substring(0, 150).replace(/(\r\n\t|\n|\r\t)/gm, "");
+			title = data.title3;
 		}
-	    desc = data.desc.substring(0, 500).replace(/(\r\n\t|\n|\r\t)/gm, "");
+		//////////////////////
+		if(data.desc.length > 1){
+			desc = data.desc;
+		} else {
+			desc = data.desc2;
+		}
+		if(title.length > 149){
+			title = title.substring(0, 146).replace(/(\r\n\t|\n|\r\t)/gm, "");
+			title.concat("...");
+		}
+		if(desc.length > 299){
+			desc = desc.substring(0, 296).replace(/(\r\n\t|\n|\r\t)/gm, "");
+			desc.concat("...");
+		}
+	    
 
 	    var scraper = new Scraper(link);
 	 	var images = [];
@@ -158,8 +179,19 @@ router.post("/find", function(req, res){
 	});
 });
 
-router.get("/edit/:id", function(req, res){
-	res.send("edit")
+router.get("/edit/:postId", middleware.checkPostOwnership, function(req, res){
+	Post.findById(req.params.id, function(err, foundPost){
+		if(err){
+			console.log(err);
+			res.redirect("/");
+		} else {
+			res.render("posts/edit", {post: foundPost});
+		}
+	});
+});
+
+router.put("/edit/:id", middleware.checkPostOwnership, function(req, res){
+
 });
 
 router.post("/fav", middleware.isLoggedIn, function(req, res){
@@ -290,22 +322,96 @@ router.post("/vote/:id/:status", middleware.isLoggedIn ,function(req, res){
 
 });
 
-router.get("/details/:postId", function(req, res){
-	var postId = req.params.postId;
-	Post.findOne({"_id": postId}, function(err, foundPost){
+router.post("/votecomment/:id/:status", middleware.isLoggedIn ,function(req, res){
+	var commentId = req.body.id;
+	var status = req.params.status;
+	Comment.findOne({"_id": commentId}, function(err, foundComment){
 		if(err){
 			console.log(err);
+			req.flash("error", "Nie znaleziono komentarza!");
+			res.redirect("/");
+		} else {
+			var existsUp = false;
+			var posUp = 0;
+			for(var i=0;i<foundComment.upvoters.length;i++){
+				if(foundComment.upvoters[i].equals(req.user._id)){
+					existsUp = true;
+					posUp = i;
+					break;
+				}
+			}
+			var existsDown = false;
+			var posDown = 0;
+			for(var i=0;i<foundComment.downvoters.length;i++){
+				if(foundComment.downvoters[i].equals(req.user._id)){
+					existsDown = true;
+					posDown = i;
+					break;
+				}
+			}
+			console.log(status + " " + existsUp + " " + existsDown);
+			if(status == "up"){
+				if(existsDown){
+					if(existsUp){
+						foundComment.upvoters.splice(posUp);
+						foundComment.downvoters.splice(posDown);
+					} else {
+						foundComment.downvoters.splice(posDown);
+						foundComment.upvoters.push(req.user._id);
+						foundComment.points += 2;
+					}
+				} else {
+					if(existsUp){
+						foundComment.upvoters.splice(posUp);
+						foundComment.points--;
+					} else {
+						foundComment.upvoters.push(req.user._id);
+						foundComment.points++;
+					}
+				}
+			} else if(status == "down"){
+				if(existsDown){
+					if(existsUp){
+						foundComment.upvoters.splice(posUp);
+						foundComment.downvoters.splice(posDown);
+					} else {
+						foundComment.downvoters.splice(posDown);
+						foundComment.points++;
+					}
+				} else {
+					if(existsUp){
+						foundComment.upvoters.splice(posUp);
+						foundComment.downvoters.push(req.user._id);
+						foundComment.points -= 2;
+					} else {
+						foundComment.downvoters.push(req.user._id);
+						foundComment.points--;
+					}
+				}
+			}
+			foundComment.save();
+			res.send({success: true, points: foundComment.points});
+		}
+	});
+
+});
+
+router.get("/details/:postId", function(req, res){
+	var postId = req.params.postId;
+	Post.findOne({_id: postId})
+	.populate({
+		path: 'comments',
+		populate: {
+			path: 'replies',
+			model: "Comment"
+		}
+	})
+	.exec((err, foundPost) => {
+		if(err || !foundPost){
 			req.flash("error", "Nie znaleziono posta!");
 			res.redirect("/");
 		} else {
-			Comment.find({"_id": foundPost.comments}, function(err, coms){
-				if(err){
-					console.log(err);
-				} else {
-					res.render("posts/show", {post: foundPost, category: "all", comments: coms});
-				}
-			})
-			
+			res.render("posts/show", {post: foundPost, category: "all"})
 		}
 	});
 });
@@ -320,7 +426,8 @@ router.post("/details/:id", middleware.isLoggedIn, function(req, res){ //komento
 			points: 0,
 			author: {
 				id: req.user._id,
-				username: req.user.username
+				username: req.user.username,
+				image: req.user.image
 			}
 		}
 
@@ -347,6 +454,59 @@ router.post("/details/:id", middleware.isLoggedIn, function(req, res){ //komento
 	
 });
 
+
+router.post("/details/:id/reply/:commentid", middleware.isLoggedIn, function(req, res){ //komentowanie
+	var commentid = req.params.commentid;
+	if(req.xhr || req.accepts('json,html') === 'json'){
+		var id = req.params.id;
+		var comment = req.body.comment;
+		var newComment = {
+			text: comment,
+			date: Date.now(),
+			points: 0,
+			author: {
+				id: req.user._id,
+				username: req.user.username,
+				image: req.user.image
+			}
+		}
+
+		Post.findOne({"_id": id}, function(err, foundPost){
+			if(err){
+				console.log(err);
+			} else {
+				if(!foundPost){
+					console.log(err);
+					return res.redirect("back");
+				}
+				Comment.findOne({"_id": commentid}, function(err, foundComment){
+					if(err){
+						console.log(err);
+						return res.redirect("back");
+					} else {
+						Comment.create(newComment, function(err, newlyCreated){
+							if(err){
+								console.log(err);
+								req.flash("error", "Nie udalo sie dodac komentarza");
+								res.redirect("back");
+							} else {
+								//foundPost.comments.push(newlyCreated);
+								//foundPost.save();
+								foundComment.replies.push(newlyCreated._id);
+								foundComment.save();
+								res.send({success: true});
+							}
+						});
+					}
+				});
+				
+			}
+		});
+	} else {
+		console.log("req.xhr nie akceptowany");
+	}
+	
+});
 
 
 router.get("/:category/:time/:page", function(req, res){
@@ -418,7 +578,7 @@ router.get("/:category/:time/:page", function(req, res){
 			}
 		});
 	} else {
-		if(category === "wykopalisko"){
+		if(category === "eksploracja"){
 			Post.find({}, function(err, foundPosts){
 				if(err){
 					console.log(err);
@@ -536,9 +696,6 @@ router.get("/:category/:time/:page", function(req, res){
 				console.log(err);
 				res.send("db error");
 			} else {
-				if (category == "ksiazki") {
-					category = "książki"
-				}
 				if(req.params.time === "alltime"){
 						pages.all = Math.ceil(foundPosts.length/numberOfPostsOnPage);
 						pages.curr = page;

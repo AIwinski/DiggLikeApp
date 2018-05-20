@@ -34,7 +34,7 @@
             } 
             
             
-            $(punkty).text(pkt + " punktów");
+            $(punkty).text(pkt);
 
           } else {
           }
@@ -75,7 +75,7 @@
               $(up).removeClass("clicked");
             } 
             
-            $(punkty).text(pkt + " punktów");
+            $(punkty).text(pkt);
 
           } else {
           }
@@ -118,6 +118,87 @@
       });
 
 
+$(".voteUpComm").click(function(e){
+      e.preventDefault();
 
+      if($('a[href="/users/login"]').length > 0){
+        window.location.href = window.location.origin + "/users/login";
+      }
+
+      var data = {
+        id: $(this).attr("id")
+      }
+      var up = "#" + data.id + ".voteUpComm";
+      var down = "#" + data.id + ".voteDownComm";
+      var punkty = "#" + data.id + ".punktyComm";
+
+      $.ajax({
+        type: "POST",
+        url: "/posts/votecomment/" + $(this).attr("id") + "/up",
+        data: data,
+        success: function(data){
+          if(data.success){
+            var pkt = data.points;
+
+            if($(up).hasClass("clickedComm")){
+              $(up).removeClass("clickedComm");
+            } else {
+              $(up).addClass("clickedComm");
+              $(down).removeClass("clickedComm");
+            } 
+            
+            
+            $(punkty).text(pkt);
+
+          } else {
+          }
+        },
+        error: function(){
+          //alert("blad");
+        }
+      });
+
+    });
+
+    $(".voteDownComm").click(function(e){
+      e.preventDefault();
+
+      if($('a[href="/users/login"]').length > 0){
+        window.location.href = window.location.origin + "/users/login";
+      }
+
+      var data = {
+        id: $(this).attr("id")
+      }
+      
+      var up = "#" + data.id + ".voteUpComm";
+      var down = "#" + data.id + ".voteDownComm";
+      var punkty = "#" + data.id + ".punktyComm";
+
+      $.ajax({
+        type: "POST",
+        url: "/posts/votecomment/" + $(this).attr("id") + "/down",
+        data: data,
+        success: function(data){
+          if(data.success){
+            var pkt = data.points;
+            if($(down).hasClass("clickedComm")){
+              $(down).removeClass("clickedComm");
+            } else {
+              $(down).addClass("clickedComm");
+              $(up).removeClass("clickedComm");
+            } 
+            
+            $(punkty).text(pkt);
+
+          } else {
+          }
+        },
+        error: function(){
+          //alert("blad");
+        }
+      });
+
+    });
        
   });

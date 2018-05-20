@@ -1,0 +1,154 @@
+<% include ../partials/header%>
+<link rel="stylesheet" type="text/css" href="/stylesheets/navbar.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/new2.css">
+
+<nav class="navbar navbar-expand-lg navbar-light fixed-top">
+	<div class="container">
+	  <a class="navbar-brand" href="/">LOGO</a>
+	  </div>
+	</div>
+</nav>
+
+<div class="container" id="mainContainer">
+
+
+	<% for(var i=0;i<images.length;i++) {%>
+	<p id="invisible" style="display: none;"><%= images[i] %></p>
+	<% } %>
+
+
+
+
+	<div class="row">
+		<div class="col-sm-12">
+			<h2>Wybierz zdjęcie oraz dodaj tytuł i opis swojego znaleziska z internetu.</h2>
+		</div>
+		<div class="col-md-4 col-sm-12">
+			<% if(images.length>0) { %>
+				<img src="<%= images[0]%>" id="img">
+			<% } else { %>
+				<img src="https://www.polskieatrakcje.pl/images/brak_zdjecia.gif" id="img">
+			<% }%>
+			<div class="button-group">
+				<button class="btn btn-sm" id="prev">Poprzednie</button>
+				<button class="btn btn-sm" id="next">Następne</button>				
+			</div>
+			<p><span id="curr"></span> / <span id="all"></span></p>
+		</div>
+		<div class="col-md-8 col-sm-12">
+			<form method="POST" action="/posts/edit/<%= post._id%>?_method=PUT">
+				<input type="text" name="image" value="<%= images[0]%>" id="imgHandler" style="display: none;">
+				<input type="text" name="link" value="<%= link%>" style="display: none;">
+				<div class="form-group">
+					<textarea class="form-control" type="text" name="title" required="true" placeholder="Tutaj wpisz tytul znaleziska z internetu" maxlength="150"><%= post.title%></textarea>
+				</div>
+				<div class="form-group">
+					<textarea class="form-control" type="text" name="description" required="true" placeholder="Opisz w kilku zdaniach czego dotyczy Twoje znalezisko" maxlength="470" ><%= post.description%></textarea>
+				</div>
+				<div class="form-group">
+					<select class="form-control" name="category">
+						<option value="blogi">Blogi</option>
+						<option value="Wydarzenia">Wydarzenia</option>
+						<option value="filmy">Filmy</option>
+						<option value="ksiazki">Książki</option>
+						<option value="komentarze">Komentarze</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<input class="btn btn-lg btn-primary btn-block" type="submit" value="Zmień">
+				</div>
+					
+			</form>
+		</div>
+	</div>
+	
+</div>
+
+</body>
+
+<script type="text/javascript">
+
+function getMeta(url, callback) {
+    var img = new Image();
+    img.src = url;
+    img.onload = function() { callback(this.width, this.height, url); }
+}
+var num = 0;
+window.onload = function(){
+	var bigImages =[];
+	var elements = document.querySelectorAll("#invisible");
+	var temp;
+	for(var i=0;i<elements.length;i++){
+		// temp = getMeta(elements[i].textContent);
+		// console.log(elements[i].textContent + " " + temp);
+		// bigImages.push(getMeta(elements[i].textContent));
+		getMeta(elements[i].textContent, function(w, h, u){
+			if(w > 200 && h > 150){
+	   	    	bigImages.push(u);
+  			}
+		});
+	}
+	for(var i=0;i<bigImages.length;i++){
+		console.log(bigImages[i]);
+	}
+
+	
+
+	/*
+	$("img").on("load", function(){
+	    $("#all").text(bigImages.length);
+	    $("#curr").text(num+1);
+	    $("#img").attr("src", bigImages[num]);
+	    $("#imgHandler").attr("value", bigImages[num]);
+	});
+	*/
+    $("#next").click(function(){
+    	num++;
+    	if(num>=bigImages.length || num<=0){
+    	    num=0;
+    	}
+    	if (bigImages.length == 0) {
+			$("#all").text("1");
+		} else {
+			$("#all").text(bigImages.length);
+		}
+    	$("#curr").text(num+1);
+    	$("#img").attr("src", bigImages[num]);
+    	$("#imgHandler").attr("value", bigImages[num]);
+	});
+
+	$("#prev").click(function(){
+    	num--;
+    	if(num<=0){
+    	    num=bigImages.length-1;
+    	}
+    	if (bigImages.length == 0) {
+			$("#all").text("1");
+		} else {
+			$("#all").text(bigImages.length);
+		}
+    	$("#curr").text(num+1);
+    	$("#img").attr("src", bigImages[num]);
+    	$("#imgHandler").attr("value", bigImages[num]);
+	});
+
+	$(".container").fadeIn(1500, function(){
+		if (bigImages.length == 0) {
+			$("#all").text("1");
+		} else {
+			$("#all").text(bigImages.length);
+		}
+		$("#curr").text(num+1);
+		$("#img").attr("src", bigImages[num]);
+		$("#imgHandler").attr("value", bigImages[num]);
+		$("#img").fadeIn(200);
+	});
+	
+
+	
+
+
+}
+</script>
+
+<% include ../partials/footer%>

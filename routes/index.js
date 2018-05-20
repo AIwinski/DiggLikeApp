@@ -5,7 +5,7 @@ var Post = require("../models/post");
 
 var categories = require("../config/categories");
 
-var numberOfPostsOnPage = 4; //podzielne przez 3 + 1
+var numberOfPostsOnPage = 7; //podzielne przez 3 + 1
 
 router.get("/about", function(req, res){
 	render("about");

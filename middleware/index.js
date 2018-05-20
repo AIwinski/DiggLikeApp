@@ -47,8 +47,8 @@ middlewareObj.checkPostOwnership = function(req, res, next){ //sprawdza czy zalo
 	if (req.isAuthenticated()) {
 		Post.findById(req.params.postId, function(err, foundPost){
 			if(err) {
-				req.flash("error", "Something went wrong");
-				res.redirect("back");
+				req.flash("error", "Nie znaleziono posta!");
+				res.redirect("/");
 			} else {
 				if(req.user.isAdmin == true){
 					next();

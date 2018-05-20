@@ -9,8 +9,27 @@ var commentSchema = new mongoose.Schema({
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User"
 		},
-		username: String
-	}
+		username: String,
+		image: String
+	},
+	replies: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Comment"
+		}
+	],
+	upvoters: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User"
+		}
+	],
+	downvoters: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User"
+		}
+	],
 });
 
 module.exports = mongoose.model("Comment", commentSchema);

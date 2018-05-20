@@ -9,6 +9,8 @@ const mailer = require('../misc/mailer');
 // var TwitterStrategy = require("passport-twitter");
 
 const User = require('../models/user');
+const Post = require("../models/post");
+const Comment = require("../models/comment");
 
 //FB and twitter
 // passport.use(new FacebookStrategy({
@@ -216,5 +218,76 @@ router.route('/logout')
     req.flash('success', 'Wylogowano pomyślnie');
     res.redirect('/');
   });
+
+router.get('/details/:id/:aktywnosc', function(req, res){
+  var userId = req.params.id;
+  var aktywnosc = req.params.aktywnosc;
+  User.findById(userId, function(err, user){
+    if(err){
+      req.flash('error', 'Błąd! Nie znaleziono użytkownika');
+      res.redirect('/');
+    } else {
+      Post.find({})
+      .populate('comments')
+      .exec()
+      .then((posts) => {
+          var added = [];
+          var commented = [];
+          var upvoted = [];
+          var downvoted = [];
+          if(aktywnosc == "dodane"){
+            posts.forEach(function(post){
+                if(post.author.id.equals(userId)){
+                  added.push(post);
+                }
+            });
+            res.render("accountDetails", {user: user, category: "all", aktywnosc: "Dodane", posts: added});
+          }
+          else if(aktywnosc == "wykopane"){
+            posts.forEach(function(post){
+                post.upvoters.forEach(function(upvoter){
+                  if(upvoter.equals(userId)){
+                    upvoted.push(post);
+                  }
+                });
+            });
+            res.render("accountDetails", {user: user, category: "all", aktywnosc: "Wykopane", posts: upvoted});
+          }
+          else if(aktywnosc == "zakopane"){
+            posts.forEach(function(post){
+                post.downvoters.forEach(function(downvoter){
+                  if(downvoter.equals(userId)){
+                    downvoted.push(post);
+                  }
+                });
+            });
+            res.render("accountDetails", {user: user, category: "all", aktywnosc: "Zakopane", posts: downvoted});
+          }
+          else if(aktywnosc == "skomentowane"){
+            var itemsprocessed = 0;
+            posts.forEach(function(post){
+              post.comments.forEach(function(commentId){
+                    if(comment.author.id.equals(userId)){
+                      commented.push(post);
+                    }
+                });
+              res.render("accountDetails", {user: user, category: "all", aktywnosc: "Skomentowane", posts: commented});
+            });
+            //console.log(commented);
+            
+          }
+          else{
+            res.redirect("/");
+          }
+        
+      })
+      .then(err => {
+        req.flash('error', 'Błąd! ');
+          res.redirect('/');
+      });
+      //Post.find({}, function(err, posts));
+    }
+  });
+});
 
 module.exports = router;

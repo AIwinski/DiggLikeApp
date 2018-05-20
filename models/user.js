@@ -8,7 +8,8 @@ const userSchema = new Schema({
     active: Boolean,
     username: String,
     password: String,
-    isAdmin: {type: Boolean, default: false}    
+    isAdmin: {type: Boolean, default: false},
+    image: {type: String, default: "http://www.thechefpost.com/uploads/profilepic/default.png"}    
 });
 
 const User = mongoose.model('user', userSchema);
@@ -22,7 +23,7 @@ module.exports.hashPassword = async (password) => {
     }
 };
 module.exports.comparePasswords = (inputPassword, hashedPassword) => {
-    console.log("poownanie hasel");
+    //console.log("poownanie hasel");
     try {
         return bcrypt.compareSync(inputPassword, hashedPassword);
     } catch(error) {

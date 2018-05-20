@@ -1,6 +1,6 @@
 var categories = [
 	{name: "hity", text: "Hity"},
-	{name: "wykopalisko", text: "Wykopalisko"},
+	{name: "eksploracja", text: "Eksploracja"},
 	{name: "blogi", text: "Blogi"},
 	{name: "wydarzenia", text: "Wydarzenia"},
 	{name: "filmy", text: "Filmy"},

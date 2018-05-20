@@ -1,0 +1,27 @@
+#userInfo {
+	margin-top: 70px;
+
+}
+
+#userInfo a {
+	text-align: center;
+	font-size: 30px;
+}
+
+.user-image {
+	width: 100%;
+}
+
+.panel {
+	text-align: center;
+}
+
+.c {
+	border: 1px solid #DEDEDE;
+}
+
+.aktywnosc p{
+	margin-top: 1rem;
+	margin-bottom: 0;
+	text-align: left;
+}

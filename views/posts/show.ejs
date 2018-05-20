@@ -1,5 +1,7 @@
 <% include ../partials/header %>
 <link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/comments.css">
+
 
 <!-- <% include ../partials/navbar %> -->
 
@@ -63,30 +65,37 @@
 
 <% if (currentUser) { -%>
   <p id="invisible2" style="display: none;"><%= currentUser.username%></p>
+  <p id="invisible3" style="display: none;"><%= currentUser.image%> </p>
 <% } -%>
   
 
 
 <div class="container" style="margin-top: 80px;">
-	<% include ../partials/flash %>
-	<div class="row">
-		<div class="col-sm-12">
+  <% include ../partials/flash %>
+  <div class="row">
+    <div class="col-sm-12">
            <div class="card" id="headerCard">
             <div class="row">
                 <div class="col-md-8">
                     <img src="<%= post.image%>" class="card-img-left" id="bigpic">
                 </div>
-	            <div class="col-md-4">
-	                <div class="card-body">
-	                	<p id="invisible" style="display: none"><%= post.link%></p>
-	                  <a href="#" id="openLink">
-	                    <h3 class="card-title"><%= post.title%> </h3>
-	                     <p class="card-text"><%= post.description%>...</p>
-	                  </a>
-                    <p><%=  (Math.round((Date.now() -  post.date)/36e5))%> godzin temu <span id="<%= post._id%>" class="punkty"><%= post.points%> punktów</span></p>
-                      <p>Dodano przez: <%= post.author.username%></p>
-	                </div>
-	                <div class="panel">
+              <div class="col-md-4">
+                  <div class="card-body">
+                    <p id="invisible" style="display: none"><%= post.link%></p>
+                      <h3 class="card-title">
+                        <span id="<%= post._id%>" class="punkty"><%= post.points%></span>
+                        <a href="#" id="openLink"> <%= post.title%> </a>
+                      </h3>
+                      <p class="card-text"><%= post.description%>...</p>
+                    
+                    <p id="authorAndDate">
+                      Dodano przez: <a href="/users/details/<%= post.author.id%>/dodane"><%= post.author.username%></a>
+                      <span style="float: right;">
+                        <%= (Math.round((Date.now() -  post.date)/36e5))%> godzin temu
+                      </span>
+                    </p>
+                  </div>
+                  <div class="panel">
                         <% var upExists = false;%>
                         <% var downExists = false;%>
                         <% for(var j=0;j<post.upvoters.length;j++) { %>
@@ -129,74 +138,222 @@
 
 
                       </div>
-	            </div>
-	          </div> 
-	       </div>
-    	</div>
-	</div>
-	<div>
-		<form id="comment-form" method="POST" action="/posts/details/<%= post._id%>" class="form-inline">
-      <div class="form-group">
-  			<textarea id="comment" type="text" name="comment" class="form-control mb-2" maxlength="100" wrap="soft" rows="1" cols="40" style="overflow:auto; resize:none;"></textarea>
-        <span class="input-group-btn">
-          <% if(currentUser) { %>
-           <button id="submit" class="btn btn-sm mb-2">Dodaj komentarz</button>
-          <% } else { %>
-            <button disabled="true" title="Musisz się zalogować" id="submit" class="btn btn-sm mb-2">Dodaj komentarz</button>
-          <% } %>
-        </span>
+              </div>
+            </div> 
+         </div>
       </div>
-		</form>
-    
-	</div>
+  </div>
 
   
 
   <div class="container">
         <div class="row">
             <div class="col-md-8">
-             <!--  <div class="page-header">
-                <h1><small class="pull-right"><%= comments.length%> komentarz</small> Comments </h1>
-              </div>  -->
-               <div class="comments-list">
-                <% for (var i = 0; i < comments.length; i++) { %>
-                       <div class="media">
-                          <div class="media-body">
-                            <h4 class="media-heading user_name"><%= comments[i].author.username%></h4>
-                             <p><p><%= comments[i].text %></p></p>
-                            
-                             <!-- <p><small><a href="">Like</a></small></p> -->
-                          </div>
-                          <p class="pull-right"><small><%= (Math.round((Date.now() -  comments[i].date)/36e5))%> godzin temu %></small></p>
-                      </div>
-                   <% } %>
-               </div>
-          </div>
-      </div>
-  </div>
-  
 
-	
+             <div>
+               <span>KOMENTARZE <a href="#">najstarsze</a>
+               <a href="#">najnowsze</a>
+               <a href="#">najlepsze</a></span>
+             </div>
+             <div class="comments-list">
+               <% if (post.comments) { -%>
+                <% for (var i = 0; i < post.comments.length; i++) { -%>
+                  
+                    <div class="comment-section">
+                       <div class="comment">
+                       <div class="row">
+                          <div class="col-md-12">
+                             <img src="<%= post.comments[i].author.image%>" class="user-photo">
+                             <span id="info">
+                               <span id="nick"><a href="/users/details/<%= post.comments[i].author.id%>/dodane"><%= post.comments[i].author.username%></a></span>
+                               <span id="when-added"><%= (Math.round((Date.now() -  post.comments[i].date)/36e5))%> godzin temu</span>
+                               <span id="comment-points">
+                                  <span id="<%=post.comments[i]._id %>" class="punktyComm"><%= post.comments[i].points%></span>
+
+                                  <% var upExistsComm = false;%>
+                                  <% var downExistsComm = false;%>
+                                  <% for(var j=0;j<post.comments[i].upvoters.length;j++) { %>
+                                    <% if(currentUser && post.comments[i].upvoters[j].equals(currentUser._id)) { %>
+                                      <% upExistsComm = true%>
+                                    <% } %>
+                                  <% } %>
+                                  <% for(var j=0;j<post.comments[i].downvoters.length;j++) { %>
+                                    <% if(currentUser && post.comments[i].downvoters[j].equals(currentUser._id)) { %>
+                                      <% downExistsComm = true%>
+                                    <% } %>
+                                  <% } %>
+                                  <% if(upExistsComm && !downExistsComm) { %>
+                                    <button id="<%=post.comments[i]._id %>" class="voteBtn commentVoteUp voteUpComm clickedComm"> <i class="fa fa-plus"></i> </button>
+                                    <button id="<%=post.comments[i]._id %>" class="voteBtn commentVoteDown voteDownComm"> <i class="fa fa-minus"></i> </button>
+                                  <% } else if(!upExistsComm && !downExistsComm) { %>
+                                    <button id="<%=post.comments[i]._id %>" class="voteBtn commentVoteUp voteUpComm"> <i class="fa fa-plus"></i> </button>
+                                    <button id="<%=post.comments[i]._id %>" class="voteBtn commentVoteDown voteDownComm"> <i class="fa fa-minus"></i> </button>
+                                  <% } else if(!upExistsComm && downExistsComm) { %>
+                                    <button id="<%=post.comments[i]._id %>" class="voteBtn commentVoteUp voteUpComm"> <i class="fa fa-plus"></i> </button>
+                                    <button id="<%=post.comments[i]._id %>" class="voteBtn commentVoteDown voteDownComm clickedComm"> <i class="fa fa-minus"></i> </button>
+                                  <% } %>
+
+
+                                    
+                                  </span> 
+                             </span>
+                          </div>
+                         <div class="col-sm-1">
+                          
+                         </div>
+                         <div class="col-sm-11">
+                           <hr>
+                           <p><%= post.comments[i].text%></p>
+                           <a class="reply-button" id="<%= post.comments[i]._id%>" href="#"><i class="fa fa-reply"></i> odpowiedz </a>
+                         </div>
+                       </div>
+                     </div>
+
+                     <div class="reply-list<%=post.comments[i]._id%>">
+                        <% for (var j = 0; j < post.comments[i].replies.length; j++) { -%>
+                          
+                          <div class="comment-reply">
+                           <div class="row">
+                              <div class="col-md-12">
+                                 <img src="<%= post.comments[i].replies[j].author.image%>" class="user-photo">
+                                 <span id="info">
+                                   <span id="nick"><a href="/users/details/<%= post.comments[i].replies[j].author.id%>/dodane"><%= post.comments[i].replies[j].author.username%></a> </span>
+                                   <span id="when-added"> <%= (Math.round((Date.now() -  post.comments[i].replies[j].date)/36e5))%> godzin temu</span>
+                                   <span id="comment-points">
+
+                                      <span id="<%=post.comments[i].replies[j]._id %>" class="punktyComm"><%= post.comments[i].replies[j].points%></span>
+
+                                      <% var upExistsCommR = false;%>
+                                      <% var downExistsCommR = false;%>
+                                      <% for(var k=0;k<post.comments[i].replies[j].upvoters.length;j++) { %>
+                                        <% if(currentUser && post.comments[i].replies[j].upvoters[k].equals(currentUser._id)) { %>
+                                          <% upExistsCommR = true%>
+                                        <% } %>
+                                      <% } %>
+                                      <% for(var k=0;k<post.comments[i].replies[j].downvoters.length;j++) { %>
+                                        <% if(currentUser && post.comments[i].replies[j].downvoters[k].equals(currentUser._id)) { %>
+                                          <% downExistsCommR = true%>
+                                        <% } %>
+                                      <% } %>
+                                      <% if(upExistsCommR && !downExistsCommR) { %>
+                                        <button id="<%=post.comments[i].replies[j]._id %>" class="voteBtn commentVoteUp voteUpComm clickedComm"> <i class="fa fa-plus"></i> </button>
+                                        <button id="<%=post.comments[i].replies[j]._id %>" class="voteBtn commentVoteDown voteDownComm"> <i class="fa fa-minus"></i> </button>
+                                      <% } else if(!upExistsCommR && !downExistsCommR) { %>
+                                        <button id="<%=post.comments[i].replies[j]._id %>" class="voteBtn commentVoteUp voteUpComm"> <i class="fa fa-plus"></i> </button>
+                                        <button id="<%=post.comments[i].replies[j]._id %>" class="voteBtn commentVoteDown voteDownComm"> <i class="fa fa-minus"></i> </button>
+                                      <% } else if(!upExistsCommR && downExistsCommR) { %>
+                                        <button id="<%=post.comments[i].replies[j]._id %>" class="voteBtn commentVoteUp voteUpComm"> <i class="fa fa-plus"></i> </button>
+                                        <button id="<%=post.comments[i].replies[j]._id %>" class="voteBtn commentVoteDown voteDownComm clickedComm"> <i class="fa fa-minus"></i> </button>
+                                      <% } %>
+
+
+                                    
+                                  </span> 
+                                 </span>
+                              </div>
+                             <div class="col-sm-1">
+                              
+                             </div>
+                             <div class="col-sm-11">
+                               <hr>
+                               <p><%= post.comments[i].replies[j].text%></p>
+                               <a class="reply-button" id="<%= post.comments[i]._id%>" href="#"><i class="fa fa-reply"></i> odpowiedz </a>
+                             </div>
+                           </div>
+                         </div>
+
+                        <% } -%>
+                     </div>
+
+
+                     <div class="comment-form comment-form-invisible reply-form" id="reply-form<%=post.comments[i]._id%>">
+                       <div class="row">
+                        <div class="col-1">
+                          
+                        </div>
+                         <div class="col-11">
+                           <form method="POST" action="/posts/details/<%= post._id%>/reply/<%= post.comments[i]._id%>" id="comment-reply-form<%=post.comments[i]._id%>">
+                             <div class="form-group">
+                               <textarea id="comment-reply-text<%= post.comments[i]._id%>" type="text" name="comment-reply-text" class="form-control" maxlength="500" wrap="soft" rows="1" ></textarea>
+                             </div>
+                             <div class="form-group">
+                               <button class="btn btn-block comment-reply-button" id="<%= post.comments[i]._id%>">Odpowiedz</button>
+                             </div>
+                           </form>
+                         </div>
+                       </div>
+                     </div>
+
+                   </div>
+
+                <% } -%>
+             <% } -%>
+             </div>
+             
+
+             <div class="comment-form">
+               <div class="row">
+                <div class="col-1">
+                  
+                </div>
+                 <div class="col-12">
+                   <form method="POST" action="/posts/details/<%= post._id%>" id="commentForm">
+                     <div class="form-group">
+                       <textarea id="comment-add-text" type="text" name="comment-add-text" class="form-control" maxlength="500" wrap="soft" rows="1" ></textarea>
+                     </div>
+                     <div class="form-group">
+                       <button class="btn btn-block" id="comment-add-button">Dodaj</button>
+                     </div>
+                   </form>
+                 </div>
+               </div>
+             </div>
+
+             
+
+  
 </div>
 <script type="text/javascript" src="/js/buttons.js"></script>
 <script type="text/javascript">
 
-    $("#submit").click(function(e){
+    $(".reply-button").click(function(e) {
+      e.preventDefault();
+      $(".reply-form").addClass("comment-form-invisible");
+      var id = $(this).attr("id");
+      id = "#reply-form".concat(id);
+      //$(".comment-form").addClass("comment-form-invisible");
+      //alert(id);
+      $(id).removeClass("comment-form-invisible");
+      $('html,body').animate({
+            scrollTop: $(id).offset().top - 200
+        }, 'slow');
+    });
+
+    $("#comment-add-button").click(function(e){
       e.preventDefault();
       var data = {};
-      data.comment = $("#comment").val();
+      data.comment = $("#comment-add-text").val();
+
+      if($('a[href="/users/login"]').length > 0){
+        window.location.href = window.location.origin + "/users/login";
+      }
+
+      if(data.comment.length < 1){
+        return;
+      }
       
 
       $.ajax({
         type: "POST",
-        url: /*window.location.origin +*/ $("#comment-form").attr("action"),
+        url: /*window.location.origin +*/ $("#commentForm").attr("action"),
         data: data,
         success: function(data){
           if(data.success){
             var nick = $("#invisible2").text();
-            var text = $("#comment").val(); 
-             $(".comments-list").append("<div id=\'new\' class=\'media\'><div class=\'media-body\'><h4 class=\'media-heading user_name\'>" + nick + "</h4><p>" + text + "</p>  <p><small></p></div><p class=\'pull-right\'><small>Przed chwilą</small></p></div>");
-            $("#comment").val("");
+            var image = $("#invisible3").text();
+            var text = $("#comment-add-text").val(); 
+             $(".comments-list").append("<div class='comment-section' id='new'><div class='comment'><div class='row'><div class='col-md-12'><img src='" + image + "' class='user-photo'><span id='info'><span id='nick'>" + nick + "</span><span id='when-added'> przed chwilą</span><span id='comment-points'><span id='points'>" + 0 + "</span><button class='voteBtn commentVoteUp'> <i class='fa fa-plus'></i> </button><button class='voteBtn commentVoteDown'> <i class='fa fa-minus'></i> </button></span></span></div><div class='col-sm-1'></div><div class='col-sm-11'><hr><p>" + text + "</p></div></div></div></div>");
+            $("#comment-add-text").val("");
 
             $('html,body').animate({
             scrollTop: $("#new").offset().top},
@@ -206,17 +363,55 @@
           }
         },
         error: function(){
-          alert("blont");
+          //alert("blont");
+        }
+      })
+
+    });
+
+    $(".comment-reply-button").click(function(e){
+      e.preventDefault();
+      var data = {};
+      var id = $(this).attr("id");
+      data.comment = $("#comment-reply-text".concat(id)).val();
+      var comm = data.comment;
+
+      if($('a[href="/users/login"]').length > 0){
+        window.location.href = window.location.origin + "/users/login";
+      }
+
+      if(data.comment.length < 1){
+        return;
+      }
+      //alert($("#comment-reply-form".concat(id)).attr("action"));
+
+      $.ajax({
+        type: "POST",
+        url: /*window.location.origin +*/ $("#comment-reply-form".concat(id)).attr("action"),
+        data: data,
+        success: function(data){
+          if(data.success){
+            var nick = $("#invisible2").text();
+            var image = $("#invisible3").text();
+             $(".reply-list".concat(id)).append("<div class='comment-reply' id='new'> <div class='row'> <div class='col-md-12'> <img src='" + image + "' class='user-photo'> <span id='info'><span id='nick'><a>" + nick + "</a> </span><span id='when-added'>Przed chwilą</span><span id='comment-points'><span id='points'> 0 </span>  <button class='voteBtn commentVoteUp'> <i class='fa fa-plus'></i> </button>  <button class='voteBtn commentVoteDown'> <i class='fa fa-minus'></i> </button></span>  </span> </div><div class='col-sm-1'> </div><div class='col-sm-11'>  <hr>  <p>" + comm + "</p> </div> </div> </div>");
+            $("#comment-reply-text".concat(id)).val("");
+
+          } else {
+            //alert("blad przy dodawaniu komentarza");
+          }
+        },
+        error: function(){
+          //alert("blont");
         }
       })
 
     });
 
 
-	$("#openLink").click(function(){
-		var url = $("#invisible").text();
-		window.open(url);
-	});
+  $("#openLink").click(function(){
+    var url = $("#invisible").text();
+    window.open(url);
+  });
 
 
     $(".vote").click(function(e){

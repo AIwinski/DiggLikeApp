@@ -1,0 +1,84 @@
+#nick {
+	color: orange;
+	font-size: 16px;
+}
+
+body {
+	background: #F2F2F2;
+}
+
+#when-added {
+	color: grey;
+	font-size: 12px;
+	letter-spacing: 0;
+}
+
+#comment-points {
+	float: right;
+}
+
+.comment {
+	border-radius: 3px;
+}
+
+.comment-reply {
+	border-radius: 3px;
+	padding-left: 60px;
+}
+
+.comment-section {
+	background: white;
+	border-radius: 4px;
+	padding: 3px;
+	margin: 2px;
+}
+
+hr{
+	margin: 0;
+}
+
+.user-photo {
+	float: left;
+	margin: 0;
+	width: 40px;
+	height: 40px;
+   	object-fit: cover;
+   	background-size: contain;
+}
+
+#info {
+	padding-left: 20px;
+}
+
+.voteBtn {
+	width: 25px;
+	border: 1px solid #CFCFCF;
+	border-radius: 3px;
+	color: white;
+	padding: 0;
+	background: white;
+}
+
+.commentVoteUp {
+	color: green;
+}
+
+.commentVoteDown {
+	color: red;
+}
+
+.commentVoteUpActive {
+	background: green;
+}
+
+.commentVoteDownActive {
+	background: red;
+}
+
+.comment-form-invisible {
+	display: none;
+}
+
+.clickedComm {
+	background: #C2C2C2
+}

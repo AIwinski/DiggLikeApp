@@ -1,9 +1,10 @@
-<% include ../partials/header %>
+<% include ./partials/header %>
+
 <link rel="stylesheet" type="text/css" href="/stylesheets/postsIndex.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/accountDetails.css">
 
 <link rel="stylesheet" type="text/css" href="/stylesheets/navbar.css">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700&amp;subset=latin-ext" rel="stylesheet">
-
 
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
   <div class="container">
@@ -15,30 +16,18 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <!-- <li class="nav-item">
-          <a class="nav-link" href="/back">WSTECZ</a>
+          <a class="nav-link" href="#">WSTECZ</a>
         </li> -->
-        <% if (category.toLowerCase() == "ulubione") { -%>
-          <li class="nav-item">
-          <a class="nav-link" href="/posts/all/24h/1">24h</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/posts/all/48h/1">48h</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/posts/all/72h/1">72h</a>
-          </li>
-        <% } else { -%>
-          <li class="nav-item">
-          <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/24h/1">24h</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/48h/1">48h</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/72h/1">72h</a>
-          </li>
-        <% } -%>
         
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/all/24h/1">24h</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/all/48h/1">48h</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/posts/all/72h/1">72h</a>
+        </li>
         
       </ul>
       <form class="form-inline my-2 my-lg-0" id="searchForm" action="/posts/find" method="POST">
@@ -67,7 +56,7 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="/posts/fav">Ulubione</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/users/details/<%= currentUser._id%>/dodane">Moje konto</a>
+              <a class="dropdown-item" href="/users/details/<%= currentUser._id%>">Moje konto</a>
             </div>
           </li>
         <% } %>
@@ -77,35 +66,35 @@
   </div>
 </nav>
 
-
-
-<div class="container" id="mainContainer">
-  <div class="container" id="menuContainer">
-      <div class="table-responsive">
-        <table class="table">
-            <tr>
-              <% for(var i=0;i<categories.length;i++) {%>
-                <th><a href="/posts/<%= categories[i].name%>/alltime/1"><%= categories[i].text.toUpperCase()%></a></th>
-              <% } %>
-            </tr>
-        </table>
-      </div>
+<div class="container" id="userInfo"> 
+  <div class="row">
+    <div class="col-md-2">
+      <img src="<%= user.image%>" class="user-image">
+    </div>
+    <div class="col-md-10">
+      <h1><%= user.username%></h1>
+    </div>
   </div>
-
-  <% include ../partials/flash %>
-
-<div class="category">
-  <% if(category && category.length>0 && category.toLowerCase() != "all") { %>
-    <% if (category.toLowerCase() == "ksiazki") { -%>
-      <h2>Książki</h2>
-    <% } else { %>
-      <h2><%= category %></h2>
-    <% } %>
-  <% } %>
+  <div class="row panel">
+    <div class="col-sm-12 aktywnosc">
+      <p>Aktywność uzytkownika</p>
+    </div>
+    <div class="col-md-3 c">
+      <a href="/users/details/<%= user._id%>/dodane">Dodane</a>
+    </div>
+    <div class="col-md-3 c">
+      <a href="/users/details/<%= user._id%>/wykopane">Wykopane</a>
+    </div>
+    <div class="col-md-3 c">
+      <a href="/users/details/<%= user._id%>/zakopane">Zakopane</a>
+    </div>
+    <div class="col-md-3 c">
+      <a href="/users/details/<%= user._id%>/skomentowane">Skomentowane</a>
+    </div>
+  </div>
 </div>
-  
 
-  <div class="container">
+<div class="container">
       <div class="row">
 
          <% if(posts && posts.length > 0) { %>
@@ -128,7 +117,7 @@
                         <%= (Math.round((Date.now() -  posts[i].date)/36e5))%> godzin temu
                       </span>
                     </p>
-                    <p class="card-text"><%= posts[i].description.substring(0,90)%></p>
+                    <p class="card-text"><%= posts[i].description.substring(0,150)%></p>
 
                     
                     <div class="panel">
@@ -191,40 +180,15 @@
           <% } %>         
   </div>
 
-  <% if(posts && posts.length > 0) {%>
-    <div id="pagin">
-      <nav>
-        <p id="pageNumber">Strona <span id="currPage"><%= pages.curr%></span> / <span id="allPages"><%= pages.all%></span></p>
-        <ul class="pagination justify-content-center">
-          <li class="page-item"><a href="#" class="page-link" id="prev">Poprzednia</a></li>      
-          <li class="page-item"><a href="#" class="page-link" id="next">Następna</a></li> 
-        </ul>
-      </nav>
-    </div>
-<% } %>
+
   
 
+	
 </div>
+
+
 
 <script type="text/javascript" src="/js/buttons.js"></script>
 
-<script type="text/javascript">
 
-    
-
-      var curr = $("#currPage").text();
-      var all = $("#allPages").text();
-
-      if(parseInt(curr)>1){
-        var url = window.location.href.slice(window.location.href.lastIndexOf("/") ,window.location.href.lastIndexOf("/")- window.location.href.length) + (parseInt(curr) - 1).toString();
-        $("#prev").prop("href", url)
-      }
-
-      if(parseInt(curr) < parseInt(all)){
-        var url = window.location.href.slice(window.location.href.lastIndexOf("/") ,window.location.href.lastIndexOf("/")- window.location.href.length) + (parseInt(curr) + 1).toString();
-        $("#next").prop("href", url)
-      }
-
-</script>
-
-<% include ../partials/footer %>
+<% include ./partials/footer %>

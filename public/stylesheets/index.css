@@ -1,5 +1,5 @@
 #mainContainer{
-	margin-top: 40px;
+	margin-top: 60px;
 	border: none;
 }
 
@@ -145,10 +145,27 @@ a:hover {
 	text-align: center;
 }
 
-.punkty {
-	float: right;
-}
-
 .nav-link {
 	font-weight: 600;
+}
+
+.punkty {
+	border: 2px solid red;
+	border-radius: 3px;
+	padding: 0px 12px;
+	margin: 1px;
+}
+
+#authorAndDate {
+	margin: 0 0;
+	padding: 0 0;
+	color: #979797;
+}
+
+.card-body {
+	padding-top: 3px;
+}
+
+.card-title {
+	margin-bottom: 0;
 }
