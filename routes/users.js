@@ -265,23 +265,23 @@ router.get('/details/:id/:aktywnosc', function(req, res){
           }
           else if(aktywnosc == "skomentowane"){
             var itemsprocessed = 0;
+            //console.log(posts);
             posts.forEach(function(post){
-              post.comments.forEach(function(commentId){
+              post.comments.forEach(function(comment){
                     if(comment.author.id.equals(userId)){
                       commented.push(post);
                     }
                 });
-              res.render("accountDetails", {user: user, category: "all", aktywnosc: "Skomentowane", posts: commented});
             });
-            //console.log(commented);
-            
+            commented = uniq_fast(commented);
+            res.render("accountDetails", {user: user, category: "all", aktywnosc: "Skomentowane", posts: commented});
           }
           else{
             res.redirect("/");
           }
         
       })
-      .then(err => {
+      .catch(err => {
         req.flash('error', 'Błąd! ');
           res.redirect('/');
       });
@@ -289,5 +289,20 @@ router.get('/details/:id/:aktywnosc', function(req, res){
     }
   });
 });
+
+function uniq_fast(a) {
+    var seen = {};
+    var out = [];
+    var len = a.length;
+    var j = 0;
+    for(var i = 0; i < len; i++) {
+         var item = a[i];
+         if(seen[item] !== 1) {
+               seen[item] = 1;
+               out[j++] = item;
+         }
+    }
+    return out;
+}
 
 module.exports = router;

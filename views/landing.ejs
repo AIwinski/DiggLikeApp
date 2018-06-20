@@ -41,7 +41,10 @@
           </li>
         <% } else { %>
           <li class="nav-item">
-            <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+            <img src="<%= currentUser.image%>" class="little-image">
+          </li>
+          <li class="nav-item">
+            <p class="nick"><%= currentUser.username%></p>
           </li>
           <!-- <li class="nav-item">
             <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
@@ -56,10 +59,13 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="/posts/fav">Ulubione</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/users/details/<%= currentUser._id%>/dodane">Moje konto</a>
+              <a href="/users/details/<%= currentUser._id%>/dodane" class="dropdown-item">Moje konto</a>
+              <div class="dropdown-divider"></div>
+              <a href="/posts/new" class="dropdown-item" id="dodaj">DODAJ</a>
             </div>
           </li>
         <% } %>
+      </ul>
       
     </div>
   </div>

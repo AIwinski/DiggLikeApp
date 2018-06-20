@@ -3,8 +3,6 @@
 <link rel="stylesheet" type="text/css" href="/stylesheets/comments.css">
 
 
-<!-- <% include ../partials/navbar %> -->
-
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
   <div class="container">
     <a class="navbar-brand" href="/">LOGO</a>
@@ -40,7 +38,10 @@
           </li>
         <% } else { %>
           <li class="nav-item">
-            <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+            <img src="<%= currentUser.image%>" class="little-image">
+          </li>
+          <li class="nav-item">
+            <p class="nick"><%= currentUser.username%></p>
           </li>
           <!-- <li class="nav-item">
             <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
@@ -54,6 +55,10 @@
               <a class="dropdown-item" href="/users/logout">Wyloguj</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="/posts/fav">Ulubione</a>
+              <div class="dropdown-divider"></div>
+              <a href="/users/details/<%= currentUser._id%>/dodane" class="dropdown-item">Moje konto</a>
+              <div class="dropdown-divider"></div>
+              <a href="/posts/new" class="dropdown-item" id="dodaj">DODAJ</a>
             </div>
           </li>
         <% } %>

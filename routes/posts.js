@@ -180,18 +180,38 @@ router.post("/find", function(req, res){
 });
 
 router.get("/edit/:postId", middleware.checkPostOwnership, function(req, res){
-	Post.findById(req.params.id, function(err, foundPost){
+	Post.findById(req.params.postId, function(err, foundPost){
 		if(err){
 			console.log(err);
 			res.redirect("/");
 		} else {
+			if(!foundPost){
+				res.redirect("/");
+			}
 			res.render("posts/edit", {post: foundPost});
 		}
 	});
 });
 
-router.put("/edit/:id", middleware.checkPostOwnership, function(req, res){
+router.put("/edit/:postId", middleware.checkPostOwnership, function(req, res){
 
+	Post.update({_id: req.params.postId}, { $set: { 
+		title: req.body.title,
+		description: req.body.description,
+		image: req.body.image,
+		category: req.body.category.toLowerCase(),
+		date: Date.now(),
+	 }})
+    .exec()
+    .then(result => {
+        req.flash("success", "Zaktualizowano post!");
+		res.redirect("/posts/details/" + req.params.postId);
+    })
+    .catch(err => {
+        console.log(err);
+        req.flash("error", "Wystąpił błąd");
+		res.redirect("/");
+    });
 });
 
 router.post("/fav", middleware.isLoggedIn, function(req, res){
@@ -638,15 +658,77 @@ router.get("/:category/:time/:page", function(req, res){
 					console.log(err);
 					res.send("db error");
 				} else {
+					var archiwum = []; //wypelnic archiwum miesiacami
+					var poczatek = new  Date(2017, 7, 1);
+					var dzis = new Date();
+					var dzisDzien = dzis.getDate();
+					var dzisMiesiac = dzis.getMonth() + 1;
+					var dzisRok = dzis.getFullYear();
+					//console.log(dzisDzien + " " + dzisMiesiac + " " + dzisRok);
+
+					var ileMiesiecyMinelo =  dzis.getMonth() - poczatek.getMonth() + (12 * (dzis.getFullYear() - poczatek.getFullYear()));
+					console.log(ileMiesiecyMinelo);
+					var miesiac;
+					for(var o =0; o<ileMiesiecyMinelo + 1; o++){
+						switch (dzisMiesiac) {
+								case 1:
+								miesiac = 'Styczeń';
+								break;
+								case 2:
+								miesiac = 'Luty';
+								break;
+								case 3:
+								miesiac = 'Marzec';
+								break;
+								case 4:
+								miesiac = 'Kwiecień';
+								break;
+								case 5:
+								miesiac = 'Maj';
+								break;
+								case 6:
+								miesiac = 'Czerwiec';
+								break;
+								case 7:
+								miesiac = 'Lipiec';
+								break;
+								case 8:
+								miesiac = 'Sierpień';
+								break;
+								case 9:
+								miesiac = 'Wrzesień';
+								break;
+								case 10:
+								miesiac = 'Pażdziernik';
+								break;
+								case 11:
+								miesiac = 'Listopad';
+								break;
+								case 12:
+								miesiac = 'Grudzień';
+								break;
+						}
+						archiwum.push({
+							text: miesiac + " " + dzisRok,
+							date: dzisMiesiac + "_" + dzisRok
+						});
+						dzisMiesiac--;
+						if(dzisMiesiac==0){
+							dzisMiesiac=12;
+							dzisRok--;
+						}
+					}
+					//console.log(archiwum);
+
 					if(req.params.time === "alltime"){
 						pages.all = Math.ceil(foundPosts.length/numberOfPostsOnPage);
 						pages.curr = page;
 						foundPosts.sort(compareDates);
 						foundPosts.sort(comparePoints);
 						foundPosts = foundPosts.slice((page-1)*numberOfPostsOnPage, page*numberOfPostsOnPage);
-						res.render("posts/index", {posts: foundPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages});
+						res.render("posts/index", {posts: foundPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages, archiwum: archiwum});
 					}
-					else if(req.params.time === "24h"){
+					else if(req.params.time === "dnia"){
 					var selectedPosts =[];
 					foundPosts.forEach(function(post){
 					if(post.date.getTime() > (new Date().getTime() - (24 * 60 * 60 * 1000)) ){
@@ -658,11 +740,11 @@ router.get("/:category/:time/:page", function(req, res){
 					selectedPosts.sort(compareDates);
 					selectedPosts.sort(comparePoints);
 					selectedPosts = selectedPosts.slice((page-1)*numberOfPostsOnPage, page*numberOfPostsOnPage);
-						res.render("posts/index", {posts: selectedPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages});
-					} else if(req.params.time === "48h"){
+						res.render("posts/index", {posts: selectedPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages, archiwum: archiwum});
+					} else if(req.params.time === "miesiaca"){
 						var selectedPosts= [];
 						foundPosts.forEach(function(post){
-							if(post.date.getTime() > (new Date().getTime() - (48 * 60 * 60 * 1000)) ){
+							if(post.date.getTime() > (new Date().getTime() - (24 * 30 * 60 * 60 * 1000)) ){
 								selectedPosts.push(post);
 							}
 						});
@@ -671,11 +753,11 @@ router.get("/:category/:time/:page", function(req, res){
 						selectedPosts.sort(compareDates);
 						selectedPosts.sort(comparePoints);
 						selectedPosts = selectedPosts.slice((page-1)*numberOfPostsOnPage, page*numberOfPostsOnPage);
-						res.render("posts/index", {posts: selectedPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages});
-					} else if(req.params.time === "72h"){
+						res.render("posts/index", {posts: selectedPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages, archiwum: archiwum});
+					} else if(req.params.time === "roku"){
 						var selectedPosts = [];
 						foundPosts.forEach(function(post){
-							if(post.date.getTime() > (new Date().getTime() - (72 * 60 * 60 * 1000)) ){
+							if(post.date.getTime() > (new Date().getTime() - (24 * 365 * 60 * 60 * 1000)) ){
 								selectedPosts.push(post);
 							}
 						});
@@ -684,9 +766,33 @@ router.get("/:category/:time/:page", function(req, res){
 						selectedPosts.sort(compareDates);
 						selectedPosts.sort(comparePoints);
 						selectedPosts = selectedPosts.slice((page-1)*numberOfPostsOnPage, page*numberOfPostsOnPage);
-						res.render("posts/index", {posts: selectedPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages});
+						res.render("posts/index", {posts: selectedPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages, archiwum: archiwum});
 					} else {
-						res.redirect("/");
+						var czas = req.params.time;
+						var miesiac = parseInt(czas.split('_')[0]);
+						var rok = parseInt(czas.split("_")[1]);
+						if(rok == NaN || miesiac == NaN){
+							return res.redirect('/');
+						}
+						var miesiacc = miesiac + 1;
+						if(miesiacc > 12){
+							rok++;
+							miesiacc =0;
+						}
+
+						var selectedPosts = [];
+						foundPosts.forEach(function(post){
+							if( post.date.getTime() > (new Date(rok, miesiac-1).getTime()) && post.date.getTime() < (new Date(rok, miesiacc -1).getTime())){
+								selectedPosts.push(post);
+							}
+						});
+						pages.all = Math.ceil(selectedPosts.length/numberOfPostsOnPage);
+						pages.curr = page;
+						selectedPosts.sort(compareDates);
+						selectedPosts.sort(comparePoints);
+						selectedPosts = selectedPosts.slice((page-1)*numberOfPostsOnPage, page*numberOfPostsOnPage);
+						res.render("posts/index", {posts: selectedPosts, category: category.charAt(0).toUpperCase() + category.slice(1), categories: categories, pages: pages, archiwum: archiwum});
+
 					}
 				}
 			});

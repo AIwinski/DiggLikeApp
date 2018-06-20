@@ -11,9 +11,9 @@
 
 	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 	    <ul class="navbar-nav mr-auto">
-	      <li class="nav-item">
+	      <!-- <li class="nav-item">
 	        <a class="nav-link" href="#">WSTECZ</a>
-	      </li>
+	      </li> -->
 	      <form method="POST" action="/posts/time">
 	      	<li class="nav-item">
 	      		<input name="category" id="#invisible" style="display: none" value="<%= category%>">
@@ -47,7 +47,7 @@
 			    </li>
 	    	<% } else { %>
 		    	<li class="nav-item">
-		            <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+		            <img src="<%= currentUser.image%>">
 		          </li>
 		          <!-- <li class="nav-item">
 		            <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>

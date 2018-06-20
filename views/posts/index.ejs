@@ -27,6 +27,30 @@
           <li class="nav-item">
             <a class="nav-link" href="/posts/all/72h/1">72h</a>
           </li>
+          <% } else if(category.toLowerCase() == "hity") { %>
+            <li class="nav-item">
+            <a class="nav-link" href="/posts/hity/dnia/1">DNIA</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/posts/hity/miesiaca/1">MIESIĄCA</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/posts/hity/roku/1">ROKU</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="dropdown-toggle nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Archiwum
+              </a>
+              <div class="dropdown-menu scrollable-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/posts/hity/alltime/1">Wszystkie</a>
+                <% for (var i = 0; i < archiwum.length; i++) { -%>
+                    <a class="dropdown-item" href="/posts/hity/<%=archiwum[i].date%>/1"><%= archiwum[i].text%></a>
+                <% } -%>
+
+              </div>
+          </li>
+
         <% } else { -%>
           <li class="nav-item">
           <a class="nav-link" href="/posts/<%= category.toLowerCase()%>/24h/1">24h</a>
@@ -52,7 +76,10 @@
           </li>
         <% } else { %>
           <li class="nav-item">
-            <a href="/posts/new" class="btn btn-light" id="dodaj">DODAJ</a>
+            <img src="<%= currentUser.image%>" class="little-image">
+          </li>
+          <li class="nav-item">
+            <p class="nick"><%= currentUser.username%></p>
           </li>
           <!-- <li class="nav-item">
             <a href="/users/logout" class="btn btn-light">WYLOGUJ SIĘ</a>
@@ -67,7 +94,9 @@
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="/posts/fav">Ulubione</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/users/details/<%= currentUser._id%>/dodane">Moje konto</a>
+              <a href="/users/details/<%= currentUser._id%>/dodane" class="dropdown-item">Moje konto</a>
+              <div class="dropdown-divider"></div>
+              <a href="/posts/new" class="dropdown-item" id="dodaj">DODAJ</a>
             </div>
           </li>
         <% } %>
